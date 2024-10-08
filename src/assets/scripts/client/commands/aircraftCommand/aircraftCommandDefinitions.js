@@ -9,7 +9,7 @@
  *
  * @fileoverview
  */
-import { convertStringToNumber } from '../../utilities/unitConverters';
+import { convertStringToNumber } from "../../utilities/unitConverters";
 import {
     zeroArgumentsValidator,
     singleArgumentValidator,
@@ -20,8 +20,8 @@ import {
     holdValidator,
     squawkValidator,
     optionalAltitudeValidator,
-    crossingValidator
-} from '../parsers/argumentValidators';
+    crossingValidator,
+} from "../parsers/argumentValidators";
 import {
     altitudeParser,
     headingParser,
@@ -29,8 +29,8 @@ import {
     timewarpParser,
     optionalAltitudeParser,
     crossingParser,
-    ilsParser
-} from '../parsers/argumentParsers';
+    ilsParser,
+} from "../parsers/argumentParsers";
 
 /**
  * A no-op function used for command definitions that do not need a parser
@@ -44,7 +44,6 @@ import {
  * @return {*}
  */
 export const noop = (args) => args;
-
 
 /**
  * Call `convertStringToNumber` and store the result in an array
@@ -65,74 +64,78 @@ const ZERO_ARG_AIRCRAFT_COMMANDS = {
     // system commands
     airac: {
         validate: zeroArgumentsValidator,
-        parse: noop
+        parse: noop,
     },
     auto: {
         validate: zeroArgumentsValidator,
-        parse: noop
+        parse: noop,
     },
     clear: {
         validate: zeroArgumentsValidator,
-        parse: noop
+        parse: noop,
     },
     pause: {
         validate: zeroArgumentsValidator,
-        parse: noop
+        parse: noop,
     },
     tutorial: {
         validate: zeroArgumentsValidator,
-        parse: noop
+        parse: noop,
     },
 
     // Aircraft commands
     abort: {
         validate: zeroArgumentsValidator,
-        parse: noop
+        parse: noop,
     },
     clearedAsFiled: {
         validate: zeroArgumentsValidator,
-        parse: noop
+        parse: noop,
     },
     delete: {
         validate: zeroArgumentsValidator,
-        parse: noop
+        parse: noop,
     },
     flyPresentHeading: {
         validate: zeroArgumentsValidator,
-        parse: noop
+        parse: noop,
     },
     takeoff: {
         validate: zeroArgumentsValidator,
-        parse: noop
+        parse: noop,
+    },
+    sayRelativePosition: {
+        validate: zeroArgumentsValidator,
+        parse: noop,
     },
     sayAltitude: {
         validate: zeroArgumentsValidator,
-        parse: noop
+        parse: noop,
     },
     sayAssignedAltitude: {
         validate: zeroArgumentsValidator,
-        parse: noop
+        parse: noop,
     },
     sayHeading: {
         validate: zeroArgumentsValidator,
-        parse: noop
+        parse: noop,
     },
     sayAssignedHeading: {
         validate: zeroArgumentsValidator,
-        parse: noop
+        parse: noop,
     },
     sayIndicatedAirspeed: {
         validate: zeroArgumentsValidator,
-        parse: noop
+        parse: noop,
     },
     sayAssignedSpeed: {
         validate: zeroArgumentsValidator,
-        parse: noop
+        parse: noop,
     },
     sayRoute: {
         validate: zeroArgumentsValidator,
-        parse: noop
-    }
+        parse: noop,
+    },
 };
 
 /**
@@ -147,56 +150,56 @@ const ZERO_ARG_AIRCRAFT_COMMANDS = {
 const SINGLE_ARG_AIRCRAFT_COMMANDS = {
     airport: {
         validate: singleArgumentValidator,
-        parse: noop
+        parse: noop,
     },
     direct: {
         validate: singleArgumentValidator,
-        parse: noop
+        parse: noop,
     },
     expectArrivalRunway: {
         validate: singleArgumentValidator,
-        parse: noop
+        parse: noop,
     },
     ils: {
         validate: singleArgumentValidator,
-        parse: ilsParser
+        parse: ilsParser,
     },
     land: {
         validate: zeroOrOneArgumentValidator,
-        parse: noop
+        parse: noop,
     },
     moveDataBlock: {
         validate: singleArgumentValidator,
-        parse: noop
+        parse: noop,
     },
     rate: {
         validate: singleArgumentValidator,
         // calling method is expecting an array with values that will get spread later, thus we purposly
         // return an array here
-        parse: strToNumArray
+        parse: strToNumArray,
     },
     reroute: {
         validate: singleArgumentValidator,
-        parse: noop
+        parse: noop,
     },
     route: {
         validate: singleArgumentValidator,
-        parse: noop
+        parse: noop,
     },
     sid: {
         validate: singleArgumentValidator,
-        parse: noop
+        parse: noop,
     },
     speed: {
         validate: singleArgumentValidator,
         // calling method is expecting an array with values that will get spread later, thus we purposly
         // return an array here
-        parse: strToNumArray
+        parse: strToNumArray,
     },
     star: {
         validate: singleArgumentValidator,
-        parse: noop
-    }
+        parse: noop,
+    },
 };
 
 /**
@@ -212,51 +215,51 @@ const SINGLE_ARG_AIRCRAFT_COMMANDS = {
 const CUSTOM_ARG_AIRCRAFT_COMMANDS = {
     taxi: {
         validate: zeroOrOneArgumentValidator,
-        parse: noop
+        parse: noop,
     },
     cancelHold: {
         validate: zeroOrOneArgumentValidator,
-        parse: noop
+        parse: noop,
     },
 
     // these commands have specific argument requirements and may need to be parsed
     // into the correct type (sting -> number)
     altitude: {
         validate: altitudeValidator,
-        parse: altitudeParser
+        parse: altitudeParser,
     },
     cross: {
         validate: crossingValidator,
-        parse: crossingParser
+        parse: crossingParser,
     },
     fix: {
         validate: fixValidator,
-        parse: noop
+        parse: noop,
     },
     heading: {
         validate: headingValidator,
-        parse: headingParser
+        parse: headingParser,
     },
     hold: {
         validate: holdValidator,
-        parse: holdParser
+        parse: holdParser,
     },
     squawk: {
         validate: squawkValidator,
-        parse: noop
+        parse: noop,
     },
     timewarp: {
         validate: zeroOrOneArgumentValidator,
-        parse: timewarpParser
+        parse: timewarpParser,
     },
     descendViaStar: {
         validate: optionalAltitudeValidator,
-        parse: optionalAltitudeParser
+        parse: optionalAltitudeParser,
     },
     climbViaSid: {
         validate: optionalAltitudeValidator,
-        parse: optionalAltitudeParser
-    }
+        parse: optionalAltitudeParser,
+    },
 };
 
 // TODO: This entire thing ought to be absorbed into aircraftCommandMap, to keep
@@ -271,5 +274,5 @@ const CUSTOM_ARG_AIRCRAFT_COMMANDS = {
 export const AIRCRAFT_COMMAND_DEFINITION = {
     ...ZERO_ARG_AIRCRAFT_COMMANDS,
     ...SINGLE_ARG_AIRCRAFT_COMMANDS,
-    ...CUSTOM_ARG_AIRCRAFT_COMMANDS
+    ...CUSTOM_ARG_AIRCRAFT_COMMANDS,
 };

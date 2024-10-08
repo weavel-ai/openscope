@@ -1,28 +1,29 @@
 /* eslint-disable max-len */
-import $ from 'jquery';
-import AircraftController from './aircraft/AircraftController';
-import AirlineController from './airline/AirlineController';
-import AirportController from './airport/AirportController';
-import AirportGuideViewController from './airportGuide/AirportGuideViewController';
-import CanvasController from './canvas/CanvasController';
-import AirportInfoController from './info/AirportInfoController';
-import ChangelogController from './changelog/ChangelogController';
-import ContentQueue from './contentQueue/ContentQueue';
-import EventTracker from './EventTracker';
-import GameController from './game/GameController';
-import InputController from './InputController';
-import EventBus from './lib/EventBus';
-import LoadingView from './LoadingView';
-import NavigationLibrary from './navigationLibrary/NavigationLibrary';
-import ScopeModel from './scope/ScopeModel';
-import SpawnPatternCollection from './trafficGenerator/SpawnPatternCollection';
-import SpawnScheduler from './trafficGenerator/SpawnScheduler';
-import UiController from './ui/UiController';
-import ScoreController from './game/ScoreController';
-import { speech_init } from './speech';
-import { EVENT } from './constants/eventNames';
-import { SELECTORS } from './constants/selectors';
-import { TRACKABLE_EVENT } from './constants/trackableEvents';
+import $ from "jquery";
+import AircraftController from "./aircraft/AircraftController";
+import AirlineController from "./airline/AirlineController";
+import AirportController from "./airport/AirportController";
+import AirportGuideViewController from "./airportGuide/AirportGuideViewController";
+import CanvasController from "./canvas/CanvasController";
+import AirportInfoController from "./info/AirportInfoController";
+import ChangelogController from "./changelog/ChangelogController";
+import ContentQueue from "./contentQueue/ContentQueue";
+import EventTracker from "./EventTracker";
+import GameController from "./game/GameController";
+import InputController from "./InputController";
+import EventBus from "./lib/EventBus";
+import LoadingView from "./LoadingView";
+import NavigationLibrary from "./navigationLibrary/NavigationLibrary";
+import ScopeModel from "./scope/ScopeModel";
+import SpawnPatternCollection from "./trafficGenerator/SpawnPatternCollection";
+import SpawnScheduler from "./trafficGenerator/SpawnScheduler";
+import UiController from "./ui/UiController";
+import ScoreController from "./game/ScoreController";
+import { speech_init } from "./speech";
+import { EVENT } from "./constants/eventNames";
+import { SELECTORS } from "./constants/selectors";
+import { TRACKABLE_EVENT } from "./constants/trackableEvents";
+import WebSocketManager from "./WebSocketManager";
 
 /**
  * Root controller class
@@ -57,10 +58,9 @@ export default class AppController {
         this.inputController = null;
         this.canvasController = null;
         this.changelogController = null;
+        this.webSocketManager = null;
 
-        return this._init()
-            .setupHandlers()
-            .enable();
+        return this._init().setupHandlers().enable();
     }
 
     /**
@@ -153,9 +153,15 @@ export default class AppController {
         aircraftTypeDefinitionList,
         airportGuideData
     ) {
-        EventTracker.recordEvent(TRACKABLE_EVENT.AIRPORTS, 'initial-load', initialAirportIcao);
+        EventTracker.recordEvent(
+            TRACKABLE_EVENT.AIRPORTS,
+            "initial-load",
+            initialAirportIcao
+        );
 
-        this.$canvasesElement = this.$element.find(SELECTORS.DOM_SELECTORS.CANVASES);
+        this.$canvasesElement = this.$element.find(
+            SELECTORS.DOM_SELECTORS.CANVASES
+        );
 
         // TODO: this entire method needs to be re-written. this is a temporary implemenation used to
         // get things working in a more cohesive manner. soon, all this instantiation should happen
@@ -168,14 +174,25 @@ export default class AppController {
         // The order in which the following classes are instantiated is extremely important. Changing
         // this order could break a lot of things. This interdependency is something we should
         // work on reducing in the future.
-        AirportController.init(initialAirportIcao, initialAirportData, airportLoadList);
+        AirportController.init(
+            initialAirportIcao,
+            initialAirportData,
+            airportLoadList
+        );
         NavigationLibrary.init(initialAirportData);
         SpawnPatternCollection.init(initialAirportData);
 
         this.airlineController = new AirlineController(airlineList);
         this.scopeModel = new ScopeModel();
-        this.aircraftController = new AircraftController(aircraftTypeDefinitionList, this.airlineController, this.scopeModel);
+        this.aircraftController = new AircraftController(
+            aircraftTypeDefinitionList,
+            this.airlineController,
+            this.scopeModel
+        );
         this.scoreController = new ScoreController(this.aircraftController);
+
+        // Initialize WebSocketManager after aircraftController is created
+        this.webSocketManager = new WebSocketManager(this.aircraftController);
 
         SpawnScheduler.init(this.aircraftController);
 
@@ -187,11 +204,23 @@ export default class AppController {
 
         UiController.init(this.$element);
 
-        this.canvasController = new CanvasController(this.$canvasesElement, this.aircraftController, this.scopeModel);
+        this.canvasController = new CanvasController(
+            this.$canvasesElement,
+            this.aircraftController,
+            this.scopeModel
+        );
 
-        this.inputController = new InputController(this.$element, this.aircraftController, this.scopeModel);
+        this.inputController = new InputController(
+            this.$element,
+            this.aircraftController,
+            this.scopeModel
+        );
         this.airportInfoController = new AirportInfoController(this.$element);
-        this.airportGuideController = new AirportGuideViewController(this.$element, airportGuideData, initialAirportData.icao);
+        this.airportGuideController = new AirportGuideViewController(
+            this.$element,
+            airportGuideData,
+            initialAirportData.icao
+        );
         this.changelogController = new ChangelogController(this.contentQueue);
 
         this.updateViewControls();
@@ -267,7 +296,6 @@ export default class AppController {
         this.aircraftController.updateAircraftStrips();
     }
 
-
     /**
      * `onChange` callback fired from within the `AirportModel` when an airport is changed.
      *
@@ -287,7 +315,11 @@ export default class AppController {
             return;
         }
 
-        EventTracker.recordEvent(TRACKABLE_EVENT.AIRPORTS, 'airport-switcher', nextAirportJson.icao);
+        EventTracker.recordEvent(
+            TRACKABLE_EVENT.AIRPORTS,
+            "airport-switcher",
+            nextAirportJson.icao
+        );
         NavigationLibrary.reset();
         this.airlineController.reset();
         this.aircraftController.aircraft_remove_all();
@@ -309,7 +341,11 @@ export default class AppController {
      * @method onTrafficReset
      */
     onTrafficReset() {
-        EventTracker.recordEvent(TRACKABLE_EVENT.AIRPORTS, 'traffic-reset', AirportController.current.icao);
+        EventTracker.recordEvent(
+            TRACKABLE_EVENT.AIRPORTS,
+            "traffic-reset",
+            AirportController.current.icao
+        );
         this.aircraftController.aircraft_remove_all();
         this.scopeModel.radarTargetCollection.reset();
         AirportController.current.resetAllRunwayQueues();
@@ -333,8 +369,14 @@ export default class AppController {
 
         this._eventBus.trigger(EVENT.MARK_SHALLOW_RENDER);
 
-        $(SELECTORS.DOM_SELECTORS.TOGGLE_RESTRICTED_AREAS).toggle((airport.restricted_areas || []).length > 0);
-        $(SELECTORS.DOM_SELECTORS.TOGGLE_SIDS).toggle(NavigationLibrary.hasSids);
-        $(SELECTORS.DOM_SELECTORS.TOGGLE_TERRAIN).toggle(airport.data.has_terrain);
+        $(SELECTORS.DOM_SELECTORS.TOGGLE_RESTRICTED_AREAS).toggle(
+            (airport.restricted_areas || []).length > 0
+        );
+        $(SELECTORS.DOM_SELECTORS.TOGGLE_SIDS).toggle(
+            NavigationLibrary.hasSids
+        );
+        $(SELECTORS.DOM_SELECTORS.TOGGLE_TERRAIN).toggle(
+            airport.data.has_terrain
+        );
     }
 }

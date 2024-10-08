@@ -4,59 +4,61 @@
 
 [Departure Commands](#departure-commands)
 
-- [Cleared as Filed](#cleared-as-filed)
-- [Climb via SID](#climb-via-sid)
-- [Takeoff](#takeoff)
-- [Taxi](#taxi)
+-   [Cleared as Filed](#cleared-as-filed)
+-   [Climb via SID](#climb-via-sid)
+-   [Takeoff](#takeoff)
+-   [Taxi](#taxi)
 
 [Arrival Commands](#arrival-commands)
 
-- [Expect Runway](#expect-runway)
-- [Descend via STAR](#descend-via-star)
-- [ILS](#ils)
+-   [Expect Runway](#expect-runway)
+-   [Descend via STAR](#descend-via-star)
+-   [ILS](#ils)
 
 [Routing Commands](#routing-commands)
 
-- [~~Fix~~](#fix)
-- [Hold](#hold)
-- [Exit Hold](#exit-hold)
-- [Proceed Direct](#proceed-direct)
-- [Route](#route)
-- [Reroute](#reroute)
-- [SID](#sid)
-- [STAR](#star)
+-   [~~Fix~~](#fix)
+-   [Hold](#hold)
+-   [Exit Hold](#exit-hold)
+-   [Proceed Direct](#proceed-direct)
+-   [Route](#route)
+-   [Reroute](#reroute)
+-   [SID](#sid)
+-   [STAR](#star)
 
 ['Basic Control Instruction' Commands](#'basic-control-instruction'-commands)
 
-- [Altitude](#altitude)
-- [Fly Present Heading](#fly-present-heading)
-- [Heading](#heading)
-- [Speed](#speed)
+-   [Altitude](#altitude)
+-   [Fly Present Heading](#fly-present-heading)
+-   [Heading](#heading)
+-   [Speed](#speed)
 
 [Conditional / Pilot's Discretion Commands](#conditional-/-pilot's-discretion-commands)
 
-- [Cross](#cross)
+-   [Cross](#cross)
 
 [Aircraft Query Commands](#aircraft-query-commands)
 
-- [Say Altitude](#say-altitude)
-- [Say Assigned Altitude](#say-assigned-altitude)
-- [Say Heading](#say-heading)
-- [Say Assigned Heading](#say-assigned-heading)
-- [Say Speed](#say-indicated-airspeed)
-- [Say Assigned Speed](#say-assigned-speed)
+-   [Say Relative Position](#say-relative-position)
+-   [Say Altitude](#say-altitude)
+-   [Say Assigned Altitude](#say-assigned-altitude)
+-   [Say Heading](#say-heading)
+-   [Say Assigned Heading](#say-assigned-heading)
+-   [Say Speed](#say-indicated-airspeed)
+-   [Say Assigned Speed](#say-assigned-speed)
 
 [Miscellaneous Commands](#miscellaneous-commands)
 
-- [~~Abort~~](#abort)
-- [Squawk](#squawk)
+-   [~~Abort~~](#abort)
+-   [Squawk](#squawk)
 
 [System Commands](#system-commands)
 
-- [Airport](#airport)
-- [Pause](#pause)
-- [Timewarp](#timewarp)
-- [Tutorial](#tutorial)
+-   [Runway Details](#runway-details)
+-   ~~[Airport](#airport)~~
+-   ~~[Pause](#pause)~~
+-   ~~[Timewarp](#timewarp)~~
+-   ~~[Tutorial](#tutorial)~~
 
 ---
 
@@ -143,7 +145,7 @@ _Syntax -_ `AAL123 dvs` or `AAL123 dvs [alt]`
 
 _Aliases -_ `ils`, `i`, `*`
 
-_Hotkey -_  `numpad *`
+_Hotkey -_ `numpad *`
 
 _Information -_ This command clears for an ILS approach to a runway. The
 aircraft will continue on its assigned heading until intercepting the localizer,
@@ -164,7 +166,7 @@ These commands allow you to manipulate the route in the aircraft's FMS.
 
 ~~_Syntax -_ `AAL123 f [fixname]`~~
 
-*_This command has been deprecated_*
+_*This command has been deprecated*_
 
 ### Hold
 
@@ -185,9 +187,9 @@ _Parameters -_
 Specify the the fix to hold over with simply `[fixname]`.  
 Optionally, you may also specify:
 
-- the direction of turns during the hold with `left`, `l`, `right`, or `r`
-- the leg length, either as `[time]min` or `[distance]nm`, where the supplied number is either an integer from `1` to `49`, or a one-decimal number from `0.1` to `49.9`
-- the radial (a 3-digit course, eg. `001` to `360`) which defines the outbound leg
+-   the direction of turns during the hold with `left`, `l`, `right`, or `r`
+-   the leg length, either as `[time]min` or `[distance]nm`, where the supplied number is either an integer from `1` to `49`, or a one-decimal number from `0.1` to `49.9`
+-   the radial (a 3-digit course, eg. `001` to `360`) which defines the outbound leg
 
 Any combination of these arguments provided in any order is acceptable, as long
 as the command `hold` comes first.
@@ -236,14 +238,14 @@ or a series of fixes. This is similar to the `reroute`/`rr` command, but this
 command will allow you to "insert" a route that connects with the route
 they're currently flying. Note that the route uses dot format:
 
->Note: Input data needs to be provided with single dots connecting all
-procedurally-linked points (eg KSFO.OFFSH9.SXC or SGD.V87.MOVER), and all
-other points that will be simply a fix direct to another fix need to be
-connected with double-dots (eg HLI..SQS..BERRA..JAN..KJAN).
+> Note: Input data needs to be provided with single dots connecting all
+> procedurally-linked points (eg KSFO.OFFSH9.SXC or SGD.V87.MOVER), and all
+> other points that will be simply a fix direct to another fix need to be
+> connected with double-dots (eg HLI..SQS..BERRA..JAN..KJAN).
 
 An example would be if an aircraft filed to take a particular airway, and
 you needed them to take a different one. Additionally, if the current route
-*and* the user-provided route share a common point, the routes are considered
+_and_ the user-provided route share a common point, the routes are considered
 to have "continuity", and the FMS will remove the intermediate fixes. This
 is demonstrated below:
 Current Route: `BAM..CUTVA..LLC..FMG..BINNZ..HETUX..CHOIR..NEWPI..LKV.HAWKZ4.KSEA`
@@ -265,14 +267,14 @@ _Aliases -_ `reroute`, `rr`
 
 _Information -_ This command allows you to wipe out the aircraft's current
 route, and assign a new route of your choosing. This is similar to the `route`
-command, but this command will allow you to *change the entire route*, while the
+command, but this command will allow you to _change the entire route_, while the
 other is meant for specifying a route to follow to join a later point in the
 aircraft's flight plan. Note that the route uses dot format:
 
->Note: Input data needs to be provided with single dots connecting all procedurally-
-linked points (eg KSFO.OFFSH9.SXC or SGD.V87.MOVER), and all other points that will
-be simply a fix direct to another fix need to be connected with double-dots
-(eg HLI..SQS..BERRA..JAN..KJAN).
+> Note: Input data needs to be provided with single dots connecting all procedurally-
+> linked points (eg KSFO.OFFSH9.SXC or SGD.V87.MOVER), and all other points that will
+> be simply a fix direct to another fix need to be connected with double-dots
+> (eg HLI..SQS..BERRA..JAN..KJAN).
 
 Full Route Example: `KSEA.HAROB5.ERAVE.Q1.ETCHY..MLBEC.BDEGA2.KSFO`
 
@@ -326,7 +328,7 @@ _Syntax -_ `AAL123 c [alt]` or `AAL123 c [alt] ex`
 
 _Aliases -_ `fph`
 
-_Information -_ This command has the aircraft fly straight ahead, regardless of assigned routing. 
+_Information -_ This command has the aircraft fly straight ahead, regardless of assigned routing.
 
 For departure aircraft prior to take off, this command is interpreted as "fly
 runway heading". The aircraft will ignore any assigned routing and will instead
@@ -365,7 +367,7 @@ _Hotkeys -_ `numpad +`, `numpad -`
 
 _Information -_ This command sets the target speed; aircraft will stay within
 their safe speeds if you tell them to fly faster or slower than they are able
-to. It takes some time to increase and reduce speed. Remember that speed 
+to. It takes some time to increase and reduce speed. Remember that speed
 assignments are given in indicated airspeed, whereas our scope can only
 display groundspeed.
 
@@ -387,6 +389,14 @@ _Syntax -_ `AAL123 x aubrn a[alt] s[spd]`
 ## Aircraft Query Commands
 
 These commands are used to ask the aircraft some basic questions.
+
+### Say Relative Position
+
+_Aliases -_ `spos`
+
+_Information -_ This command reads back the aircraft's current relative position compared to the airport center, in latitude and longitude (km).
+
+_Syntax -_ `AAL123 spos`
 
 ### Say Altitude
 
@@ -449,48 +459,56 @@ All other commands are listed below.
 
 ~~_Syntax -_ `AAL123 abort`~~
 
-*_This command has been deprecated_*
+_*This command has been deprecated*_
 
-### Squawk
+### ~~Squawk~~
 
-_Aliases -_ `sq`
+~~_Aliases -_ `sq`~~
 
-_Information -_ This command tells an aircraft to set its transponder code, or "squawk" a four-digit number, from `0000` to `7777`. These codes uniquely identify each plane to the air traffic controller. Certain codes have special significance, such as `0033: Paradrop in progress` or `1200: VFR`. Currently the squawk is purely cosmetic, though it will be important for features planned in the future.
+~~_Information -_ This command tells an aircraft to set its transponder code, or "squawk" a four-digit number, from `0000` to `7777`. These codes uniquely identify each plane to the air traffic controller. Certain codes have special significance, such as `0033: Paradrop in progress` or `1200: VFR`. Currently the squawk is purely cosmetic, though it will be important for features planned in the future.~~
 
-_Parameters -_ A four digit number. Each number must be between `0` and `7`, inclusive. For example, `0736` is a valid squawk, `9416` is not.
+~~_Parameters -_ A four digit number. Each number must be between `0` and `7`, inclusive. For example, `0736` is a valid squawk, `9416` is not.~~
 
-_Syntax -_ `AAL123 squawk ###`
+~~_Syntax -_ `AAL123 squawk ###`~~
 
 ## System Commands
 
 openScope has a number of commands that do not change simulation mechanics, known as _system commands_. While most are able to be executed via various menus, they can be entered in the command bar if one so desires.
 
-### Airport
+### Get Runway Details
 
-_Information -_ Changes the current airport to the one specified.
+_Aliases -_ `rd`
 
-_Parameters -_ The ICAO (four-letter) code of the desired airport.
+_Information -_ This command reads back the current airport's runway details.
 
-_Syntax -_ `airport [ICAO]`
+_Syntax -_ `rd`
 
-### Pause
+### ~~Pause~~
 
-_Information -_ Pauses the simulation. Click anywhere to resume.
+~~_Information -_ Pauses the simulation. Click anywhere to resume.~~
 
-_Syntax -_ `pause`
+~~_Syntax -_ `pause`~~
 
-### Timewarp
+### ~~Timewarp~~
 
-_Aliases -_ `tw`
+~~_Aliases -_ `tw`~~
 
-_Information -_ Sets the rate at which time passes, normal is `1`. While the time warp button can only set the rate to `1`, `2`, or `5`, the timewarp command accepts any value greater than or equal to 1.
+~~_Information -_ Sets the rate at which time passes, normal is `1`. While the time warp button can only set the rate to `1`, `2`, or `5`, the timewarp command accepts any value greater than or equal to 1.~~
 
-_Parameters -_ A number to multiply the rate at which time passes. Omitting the parameter, or setting it to `1`, resets to normal time.
+~~_Parameters -_ A number to multiply the rate at which time passes. Omitting the parameter, or setting it to `1`, resets to normal time.~~
 
-_Syntax -_ `timewarp [rate]`
+~~_Syntax -_ `timewarp [rate]`~~
 
-### Tutorial
+### ~~Tutorial~~
 
-_Information -_ Opens the tutorial.
+~~_Information -_ Opens the tutorial.~~
 
-_Syntax -_ `tutorial`
+~~_Syntax -_ `tutorial`~~
+
+### ~~Airport~~
+
+~~_Information -_ Changes the current airport to the one specified.~~
+
+~~_Parameters -_ The ICAO (four-letter) code of the desired airport.~~
+
+~~_Syntax -_ `airport [ICAO]`~~

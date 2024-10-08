@@ -1,4 +1,4 @@
-import _findKey from 'lodash/findKey';
+import _findKey from "lodash/findKey";
 
 /**
  * Complete map of commands
@@ -20,205 +20,215 @@ import _findKey from 'lodash/findKey';
  */
 export const AIRCRAFT_COMMAND_MAP = {
     abort: {
-        aliases: ['abort'],
-        functionName: 'runAbort',
-        isSystemCommand: false
+        aliases: ["abort"],
+        functionName: "runAbort",
+        isSystemCommand: false,
     },
     airac: {
-        aliases: ['airac'],
-        functionName: '',
-        isSystemCommand: true
+        aliases: ["airac"],
+        functionName: "",
+        isSystemCommand: true,
     },
     airport: {
-        aliases: ['airport'],
-        functionName: '',
-        isSystemCommand: true
+        aliases: ["airport"],
+        functionName: "",
+        isSystemCommand: true,
     },
     altitude: {
-        aliases: ['a', 'altitude', 'c', 'climb', 'd', 'descend'],
-        functionName: 'runAltitude',
-        isSystemCommand: false
+        aliases: ["a", "altitude", "c", "climb", "d", "descend"],
+        functionName: "runAltitude",
+        isSystemCommand: false,
     },
     auto: {
-        aliases: ['auto'],
-        functionName: '',
-        isSystemCommand: true
+        aliases: ["auto"],
+        functionName: "",
+        isSystemCommand: true,
     },
     clear: {
-        aliases: ['clear'],
-        functionName: '',
-        isSystemCommand: true
+        aliases: ["clear"],
+        functionName: "",
+        isSystemCommand: true,
     },
     clearedAsFiled: {
-        aliases: ['caf', 'clearedAsFiled'],
-        functionName: 'runClearedAsFiled',
-        isSystemCommand: false
+        aliases: ["caf", "clearedAsFiled"],
+        functionName: "runClearedAsFiled",
+        isSystemCommand: false,
     },
     climbViaSid: {
-        aliases: ['climbViaSid', 'cvs'],
-        functionName: 'runClimbViaSID',
-        isSystemCommand: false
+        aliases: ["climbViaSid", "cvs"],
+        functionName: "runClimbViaSID",
+        isSystemCommand: false,
     },
     cross: {
-        aliases: ['cross', 'cr', 'x'],
-        functionName: 'runCross',
-        isSystemCommand: false
+        aliases: ["cross", "cr", "x"],
+        functionName: "runCross",
+        isSystemCommand: false,
     },
     delete: {
-        aliases: ['del', 'delete', 'kill'],
-        functionName: 'runDelete',
-        isSystemCommand: false
+        aliases: ["del", "delete", "kill"],
+        functionName: "runDelete",
+        isSystemCommand: false,
     },
     descendViaStar: {
-        aliases: ['descendViaStar', 'dvs'],
-        functionName: 'runDescendViaStar',
-        isSystemCommand: false
+        aliases: ["descendViaStar", "dvs"],
+        functionName: "runDescendViaStar",
+        isSystemCommand: false,
     },
     direct: {
-        aliases: ['dct', 'direct', 'pd'],
-        functionName: 'runDirect',
-        isSystemCommand: false
+        aliases: ["dct", "direct", "pd"],
+        functionName: "runDirect",
+        isSystemCommand: false,
     },
     cancelHold: {
-        aliases: ['exithold', 'cancelhold', 'continue', 'nohold', 'xh'],
-        functionName: 'runCancelHoldingPattern',
-        isSystemCommand: false
+        aliases: ["exithold", "cancelhold", "continue", "nohold", "xh"],
+        functionName: "runCancelHoldingPattern",
+        isSystemCommand: false,
     },
     expectArrivalRunway: {
-        aliases: ['e'],
-        functionName: 'runExpectArrivalRunway',
-        isSystemCommand: false
+        aliases: ["e"],
+        functionName: "runExpectArrivalRunway",
+        isSystemCommand: false,
     },
     fix: {
-        aliases: ['f', 'fix', 'track'],
-        functionName: 'runFix',
-        isSystemCommand: false
+        aliases: ["f", "fix", "track"],
+        functionName: "runFix",
+        isSystemCommand: false,
     },
     flyPresentHeading: {
-        aliases: ['fph'],
-        functionName: 'runFlyPresentHeading',
-        isSystemCommand: false
+        aliases: ["fph"],
+        functionName: "runFlyPresentHeading",
+        isSystemCommand: false,
     },
     heading: {
-        aliases: ['fh', 'h', 'heading', 't', 'turn'],
-        functionName: 'runHeading',
-        isSystemCommand: false
+        aliases: ["fh", "h", "heading", "t", "turn"],
+        functionName: "runHeading",
+        isSystemCommand: false,
     },
     hold: {
-        aliases: ['hold'],
-        functionName: 'runHold',
-        isSystemCommand: false
+        aliases: ["hold"],
+        functionName: "runHold",
+        isSystemCommand: false,
     },
     ils: {
-        aliases: ['*', 'i', 'ils'],
-        functionName: 'runIls',
-        isSystemCommand: false
+        aliases: ["*", "i", "ils"],
+        functionName: "runIls",
+        isSystemCommand: false,
     },
     land: {
-        aliases: ['land'],
-        functionName: 'runLand',
-        isSystemCommand: false
+        aliases: ["land"],
+        functionName: "runLand",
+        isSystemCommand: false,
     },
     moveDataBlock: {
-        aliases: ['`'],
-        functionName: 'runMoveDataBlock',
-        isSystemCommand: false
+        aliases: ["`"],
+        functionName: "runMoveDataBlock",
+        isSystemCommand: false,
     },
     pause: {
-        aliases: ['pause'],
-        functionName: '',
-        isSystemCommand: true
+        aliases: ["pause"],
+        functionName: "",
+        isSystemCommand: true,
     },
     rate: {
-        aliases: ['rate'],
-        functionName: '',
-        isSystemCommand: true
+        aliases: ["rate"],
+        functionName: "",
+        isSystemCommand: true,
     },
     reroute: {
-        aliases: ['reroute', 'rr'],
-        functionName: 'runReroute',
-        isSystemCommand: false
+        aliases: ["reroute", "rr"],
+        functionName: "runReroute",
+        isSystemCommand: false,
     },
     route: {
-        aliases: ['route'],
-        functionName: 'runRoute',
-        isSystemCommand: false
+        aliases: ["route"],
+        functionName: "runRoute",
+        isSystemCommand: false,
+    },
+    sayRelativePosition: {
+        aliases: ["spos"],
+        functionName: "runSayRelativePosition",
+        isSystemCommand: false,
     },
     sayAltitude: {
-        aliases: ['sa'],
-        functionName: 'runSayAltitude',
-        isSystemCommand: false
+        aliases: ["sa"],
+        functionName: "runSayAltitude",
+        isSystemCommand: false,
     },
     sayAssignedAltitude: {
-        aliases: ['saa'],
-        functionName: 'runSayAssignedAltitude',
-        isSystemCommand: false
+        aliases: ["saa"],
+        functionName: "runSayAssignedAltitude",
+        isSystemCommand: false,
     },
     sayAssignedHeading: {
-        aliases: ['sah'],
-        functionName: 'runSayAssignedHeading',
-        isSystemCommand: false
+        aliases: ["sah"],
+        functionName: "runSayAssignedHeading",
+        isSystemCommand: false,
     },
     sayAssignedSpeed: {
-        aliases: ['sas'],
-        functionName: 'runSayAssignedSpeed',
-        isSystemCommand: false
+        aliases: ["sas"],
+        functionName: "runSayAssignedSpeed",
+        isSystemCommand: false,
     },
     sayHeading: {
-        aliases: ['sh'],
-        functionName: 'runSayHeading',
-        isSystemCommand: false
+        aliases: ["sh"],
+        functionName: "runSayHeading",
+        isSystemCommand: false,
     },
     sayIndicatedAirspeed: {
-        aliases: ['si'],
-        functionName: 'runSayIndicatedAirspeed',
-        isSystemCommand: false
+        aliases: ["si"],
+        functionName: "runSayIndicatedAirspeed",
+        isSystemCommand: false,
     },
     sayRoute: {
-        aliases: ['sr'],
-        functionName: 'runSayRoute',
-        isSystemCommand: false
+        aliases: ["sr"],
+        functionName: "runSayRoute",
+        isSystemCommand: false,
     },
     sid: {
-        aliases: ['sid'],
-        functionName: 'runSID',
-        isSystemCommand: false
+        aliases: ["sid"],
+        functionName: "runSID",
+        isSystemCommand: false,
     },
     speed: {
-        aliases: ['-', '+', 'slow', 'sp', 'speed'],
-        functionName: 'runSpeed',
-        isSystemCommand: false
+        aliases: ["-", "+", "slow", "sp", "speed"],
+        functionName: "runSpeed",
+        isSystemCommand: false,
     },
     squawk: {
-        aliases: ['sq', 'squawk'],
-        functionName: 'runSquawk',
-        isSystemCommand: false
+        aliases: ["sq", "squawk"],
+        functionName: "runSquawk",
+        isSystemCommand: false,
     },
     star: {
-        aliases: ['star'],
-        functionName: 'runSTAR',
-        isSystemCommand: false
+        aliases: ["star"],
+        functionName: "runSTAR",
+        isSystemCommand: false,
     },
     takeoff: {
-        aliases: ['/', 'cto', 'to', 'takeoff'],
-        functionName: 'runTakeoff',
-        isSystemCommand: false
+        aliases: ["/", "cto", "to", "takeoff"],
+        functionName: "runTakeoff",
+        isSystemCommand: false,
     },
     taxi: {
-        aliases: ['taxi', 'w', 'wait'],
-        functionName: 'runTaxi',
-        isSystemCommand: false
+        aliases: ["taxi", "w", "wait"],
+        functionName: "runTaxi",
+        isSystemCommand: false,
     },
     timewarp: {
-        aliases: ['timewarp', 'tw'],
-        functionName: '',
-        isSystemCommand: true
+        aliases: ["timewarp", "tw"],
+        functionName: "",
+        isSystemCommand: true,
     },
     tutorial: {
-        aliases: ['tutorial'],
-        functionName: '',
-        isSystemCommand: true
-    }
+        aliases: ["tutorial"],
+        functionName: "",
+        isSystemCommand: true,
+    },
+    sayRunwayDetails: {
+        aliases: ["rd"],
+        functionName: "getRunwayDetails",
+        isSystemCommand: true,
+    },
 };
 
 /**
@@ -226,7 +236,7 @@ export const AIRCRAFT_COMMAND_MAP = {
  * @type {array}
  * @final
  */
-export const EXPEDITE = ['expedite', 'ex'];
+export const EXPEDITE = ["expedite", "ex"];
 
 /**
  * Get the name of a command when given any of that command's aliases
@@ -236,5 +246,8 @@ export const EXPEDITE = ['expedite', 'ex'];
  * @return {string}
  */
 export function findCommandNameWithAlias(commandAlias) {
-    return _findKey(AIRCRAFT_COMMAND_MAP, (command) => command.aliases.indexOf(commandAlias) !== -1);
+    return _findKey(
+        AIRCRAFT_COMMAND_MAP,
+        (command) => command.aliases.indexOf(commandAlias) !== -1
+    );
 }

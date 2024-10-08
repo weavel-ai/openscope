@@ -5,8 +5,8 @@
  * @type {object}
  */
 export const COMMAND_CONTEXT = {
-    AIRCRAFT: 'aircraft',
-    SCOPE: 'scope'
+    AIRCRAFT: "aircraft",
+    SCOPE: "scope",
 };
 
 /**
@@ -19,42 +19,41 @@ export const COMMAND_CONTEXT = {
  * @final
  */
 export const KEY_CODES = {
-
-    CONTROL_LEFT: 'ControlLeft',
-    CONTROL_RIGHT: 'ControlRight',
-    SHIFT_LEFT: 'ShiftLeft',
-    SHIFT_RIGHT: 'ShiftRight',
-    ENTER: 'Enter',
-    ESCAPE: 'Escape',
-    TAB: 'Tab',
-    PAGE_UP: 'PageUp',
-    PAGE_DOWN: 'PageDown',
+    CONTROL_LEFT: "ControlLeft",
+    CONTROL_RIGHT: "ControlRight",
+    SHIFT_LEFT: "ShiftLeft",
+    SHIFT_RIGHT: "ShiftRight",
+    ENTER: "Enter",
+    ESCAPE: "Escape",
+    TAB: "Tab",
+    PAGE_UP: "PageUp",
+    PAGE_DOWN: "PageDown",
     // numpad
-    NUM_MULTIPLY: 'NumpadMultiply',
-    NUM_ADD: 'NumpadAdd',
-    NUM_SUBTRACT: 'NumpadSubtract',
-    NUM_DIVIDE: 'NumpadDivide',
-    NUM_ENTER: 'NumpadEnter',
+    NUM_MULTIPLY: "NumpadMultiply",
+    NUM_ADD: "NumpadAdd",
+    NUM_SUBTRACT: "NumpadSubtract",
+    NUM_DIVIDE: "NumpadDivide",
+    NUM_ENTER: "NumpadEnter",
     // arrow keys
-    LEFT_ARROW: 'ArrowLeft',
-    UP_ARROW: 'ArrowUp',
-    RIGHT_ARROW: 'ArrowRight',
-    DOWN_ARROW: 'ArrowDown',
+    LEFT_ARROW: "ArrowLeft",
+    UP_ARROW: "ArrowUp",
+    RIGHT_ARROW: "ArrowRight",
+    DOWN_ARROW: "ArrowDown",
     // F-Keys
-    F1: 'F1',
-    F2: 'F2',
-    F3: 'F3',
-    F4: 'F4',
-    F5: 'F5',
-    F6: 'F6',
-    F7: 'F7',
-    F8: 'F8',
-    F9: 'F9',
-    F10: 'F10',
-    F11: 'F11',
-    F12: 'F12',
+    F1: "F1",
+    F2: "F2",
+    F3: "F3",
+    F4: "F4",
+    F5: "F5",
+    F6: "F6",
+    F7: "F7",
+    F8: "F8",
+    F9: "F9",
+    F10: "F10",
+    F11: "F11",
+    F12: "F12",
     // `
-    BACKQUOTE: 'Backquote'
+    BACKQUOTE: "Backquote",
 };
 
 /**
@@ -65,7 +64,6 @@ export const KEY_CODES = {
  * @final
  */
 export const LEGACY_KEY_CODES = {
-
     ENTER: 13,
     ESCAPE: 27,
     TAB: 9,
@@ -95,16 +93,16 @@ export const LEGACY_KEY_CODES = {
     F11: 122,
     F12: 123,
     // `
-    BACKQUOTE: 220
+    BACKQUOTE: 220,
 };
 
 /**
  * Enumeration of the render styles used by `MeasureTool`
  */
 export const MEASURE_TOOL_STYLE = {
-    STRAIGHT: 'straight',
-    ARC_TO_NEXT: 'initial_turn',
-    ALL_ARCED: 'arced'
+    STRAIGHT: "straight",
+    ARC_TO_NEXT: "initial_turn",
+    ALL_ARCED: "arced",
 };
 
 /**
@@ -115,9 +113,9 @@ export const MEASURE_TOOL_STYLE = {
  * @final
  */
 export const MOUSE_BUTTON_NAMES = {
-    LEFT: 'left',
-    MIDDLE: 'middle',
-    RIGHT: 'right'
+    LEFT: "left",
+    MIDDLE: "middle",
+    RIGHT: "right",
 };
 
 /**
@@ -132,7 +130,7 @@ export const MOUSE_BUTTON_NAMES = {
 export const MOUSE_EVENT_CODE = {
     LEFT_PRESS: 1,
     MIDDLE_PRESS: 2,
-    RIGHT_PRESS: 3
+    RIGHT_PRESS: 3,
 };
 
 /**
@@ -143,13 +141,14 @@ export const MOUSE_EVENT_CODE = {
  * @final
  */
 export const PARSED_COMMAND_NAME = {
-    AIRAC: 'airac',
-    AIRPORT: 'airport',
-    AUTO: 'auto',
-    CLEAR: 'clear',
-    PAUSE: 'pause',
-    RATE: 'rate',
-    TIMEWARP: 'timewarp',
-    TRANSMIT: 'transmit',
-    TUTORIAL: 'tutorial'
+    AIRAC: "airac",
+    AIRPORT: "airport",
+    AUTO: "auto",
+    CLEAR: "clear",
+    PAUSE: "pause",
+    RATE: "rate",
+    TIMEWARP: "timewarp",
+    TRANSMIT: "transmit",
+    TUTORIAL: "tutorial",
+    RUNWAY_DETAILS: "getRunwayDetails",
 };
