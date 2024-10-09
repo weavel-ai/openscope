@@ -1064,6 +1064,8 @@ export default class AircraftController {
                 relativePosition: aircraft.relativePosition,
                 arrivalRunway:
                     aircraft.pilot._fms?.arrivalRunwayModel?.name ?? null,
+                relativePositionInOneMinute:
+                    aircraft.getRelativePositionInOneMinute(),
             };
         });
 

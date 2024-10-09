@@ -48,6 +48,7 @@ import {
     nm,
     nm_ft,
     UNIT_CONVERSION_CONSTANTS,
+    km,
 } from "../utilities/unitConverters";
 import { MCP_MODE, MCP_MODE_NAME } from "./ModeControl/modeControlConstants";
 import {
@@ -3197,5 +3198,42 @@ export default class AircraftModel {
         }
 
         return [true];
+    }
+
+    /**
+     * Calculates the relative position of an aircraft 1 minute ahead.
+     *
+     * @for CanvasController
+     * @method getRelativePositionInOneMinute
+     * @param {CanvasContext} cc - The canvas context (not used in this function but kept for consistency).
+     * @param {AircraftModel} aircraftModel - The aircraft model containing state information.
+     * @return {array<number>|null} [newRelativeX, newRelativeY] or null if the aircraft has been hit.
+     */
+    getRelativePositionInOneMinute() {
+        // const lineLengthInHours = lineLengthInMinutes * TIME.ONE_MINUTE_IN_HOURS; // Converts minutes to hours
+
+        /**
+         * Assumption:
+         * - `aircraftModel.groundSpeed` is in knots.
+         * - The `km` function converts nautical miles (NM) to kilometers (1 NM ≈ 1.852 km).
+         *
+         * Calculation Steps:
+         * 1. Convert ground speed from knots to nautical miles per hour (assuming 1 knot = 1 NM/h).
+         * 2. Calculate the distance traveled in 1 minute.
+         * 3. Convert the distance from nautical miles to kilometers.
+         */
+
+        const distanceInNM = this.groundSpeed / 60; // Distance in nautical miles
+        const distance_km = km(distanceInNM); // Convert NM to kilometers
+
+        // Calculate the movement vector based on the current ground track (heading)
+        const dx = distance_km * Math.cos(this.groundTrack);
+        const dy = distance_km * Math.sin(this.groundTrack);
+
+        // Calculate the new relative position
+        const newRelativeX = this.relativePosition[0] + dx;
+        const newRelativeY = this.relativePosition[1] + dy;
+
+        return [newRelativeX, newRelativeY];
     }
 }
