@@ -1059,7 +1059,6 @@ export default class AircraftController {
                 heading: radiansToDegrees(aircraft.heading),
                 altitude: aircraft.altitude,
                 speed: aircraft.speed,
-                trending: aircraft.trend,
                 history: aircraft.history,
                 flightPhase: aircraft.flightPhase,
                 relativePosition: aircraft.relativePosition,
