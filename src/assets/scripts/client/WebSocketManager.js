@@ -182,10 +182,52 @@ export default class WebSocketManager {
                 const runwayDetails =
                     airportModel._runwayCollection.runways.reduce(
                         (acc, runway) => {
+                            const extendedLength = runway.length * 3;
+
+                            // Calculate the direction vector based on the angle
+                            const dx = extendedLength * Math.cos(runway.angle);
+                            const dy = extendedLength * Math.sin(runway.angle);
+
+                            // Calculate perpendicular vector for width
+                            const halfWidth = runway.length / 2;
+                            const perpAngle = runway.angle + Math.PI / 2;
+                            const perpDx = halfWidth * Math.cos(perpAngle);
+                            const perpDy = halfWidth * Math.sin(perpAngle);
+
+                            // Calculate the four vertices
+
+                            const point1 = {
+                                x: runway._positionModel.x + perpDx,
+                                y: runway._positionModel.y + perpDy,
+                            };
+                            const point2 = {
+                                x: runway._positionModel.x - perpDx,
+                                y: runway._positionModel.y - perpDy,
+                            };
+                            const point3 = {
+                                x: runway._positionModel.x + perpDx - dx,
+                                y: runway._positionModel.y + perpDy - dy,
+                            };
+                            const point4 = {
+                                x: runway._positionModel.x - perpDx - dx,
+                                y: runway._positionModel.y - perpDy - dy,
+                            };
                             acc[runway.name] = {
                                 start_relative_x: runway._positionModel.x,
                                 start_relative_y: runway._positionModel.y,
-                                angle: runway.angle,
+                                // end_relative_x:
+                                //     runway._positionModel.x +
+                                //     runway.length * Math.cos(runway.angle),
+                                // end_relative_y:
+                                //     runway._positionModel.y +
+                                //     runway.length * Math.sin(runway.angle),
+                                landing_possible_airspace: [
+                                    point1,
+                                    point2,
+                                    point3,
+                                    point4,
+                                ],
+                                // angle: runway.angle,
                                 length: runway.length,
                                 taxi_queue: runway.queue.map((aircraftId) => {
                                     const aircraft =
@@ -196,7 +238,7 @@ export default class WebSocketManager {
                                         ? aircraft.callsign
                                         : aircraftId;
                                 }),
-                                gps: runway.gps,
+                                // gps: runway.gps,
                             };
                             return acc;
                         },
