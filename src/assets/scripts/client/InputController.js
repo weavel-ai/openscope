@@ -1234,36 +1234,12 @@ export default class InputController {
     }
 
     /**
-     * Types out the given text in the command input with a delay between each character
-     *
-     * @for InputController
-     * @method _typeChars
-     * @param text {string} The text to type out
-     * @returns {Promise} A promise that resolves when typing is complete
-     */
-    _typeChars(text) {
-        return new Promise((resolve) => {
-            const typeCharacter = (index) => {
-                if (index < text.length) {
-                    this.$commandInput.val(
-                        this.$commandInput.val() + text.charAt(index)
-                    );
-                    setTimeout(() => typeCharacter(index + 1), 30); // 30ms delay between characters
-                } else {
-                    resolve();
-                }
-            };
-
-            typeCharacter(0);
-        });
-    }
-
-    /**
      * Writes text into the UI's input box and submits it
      *
      * @for InputController
      * @method writeAndSubmitCommand
      * @param text {string} The text to write and submit
+     * @returns {Promise<Array>} A promise that resolves with the result of the command
      */
     writeAndSubmitCommand(text) {
         this._commandQueue.push(text);
@@ -1276,18 +1252,24 @@ export default class InputController {
      * @for InputController
      * @method _processNextCommand
      * @private
+     * @returns {Promise<Array>} A promise that resolves with the result of the command
      */
     _processNextCommand() {
         if (this._isProcessingCommand || this._commandQueue.length === 0) {
-            return;
+            console.debug(
+                "No command to process or already processing a command."
+            );
+            return Promise.resolve();
         }
 
         this._isProcessingCommand = true;
         const text = this._commandQueue.shift();
+        console.debug(`Processing command: ${text}`);
 
-        try {
+        return new Promise((resolve) => {
             const parser = new CommandParser(text);
             const parsedCommand = parser.parse();
+            console.debug("Parsed command:", parsedCommand);
 
             const aircraftModel =
                 this._aircraftController.findAircraftByCallsign(
@@ -1295,24 +1277,62 @@ export default class InputController {
                 );
 
             if (aircraftModel) {
+                console.debug(
+                    `Found aircraft model: ${aircraftModel.callsign}`
+                );
                 prop.input.callsign = aircraftModel.callsign;
-
                 this._eventBus.trigger(EVENT.SELECT_AIRCRAFT, aircraftModel);
+            } else {
+                console.debug("No matching aircraft model found.");
             }
-            this._typeChars(text).then(() => {
-                const response = this.processAircraftCommand();
-                return response;
-            });
-        } catch (error) {
-            console.error(error);
-            return [false, error.message];
-        } finally {
-            // Clear the input after processing
-            setTimeout(() => {
-                this.$commandInput.val("");
-                this._isProcessingCommand = false;
-                this._processNextCommand(); // Process next command in queue
-            }, 1000);
-        }
+
+            this._typeChars(text)
+                .then(() => {
+                    const response = this.processAircraftCommand();
+                    console.debug("Command processed with response:", response);
+                    resolve([true, ""]);
+                })
+                .catch((error) => {
+                    console.error("Error processing command:", error);
+                    resolve([false, error.message]);
+                })
+                .finally(() => {
+                    // Clear the input after processing
+                    setTimeout(() => {
+                        this.$commandInput.val("");
+                        this._isProcessingCommand = false;
+                        console.debug(
+                            "Command input cleared and ready for next command."
+                        );
+                        this._processNextCommand(); // Process next command in queue
+                    }, 800);
+                });
+        });
+    }
+
+    /**
+     * Types out the given text in the command input with a delay between each character
+     *
+     * @for InputController
+     * @method _typeChars
+     * @param text {string} The text to type out
+     * @returns {Promise} A promise that resolves when typing is complete
+     */
+    _typeChars(text) {
+        return new Promise((resolve) => {
+            let i = 0;
+            const typeNextChar = () => {
+                if (i < text.length) {
+                    this.$commandInput.val(
+                        this.$commandInput.val() + text.charAt(i)
+                    );
+                    i++;
+                    setTimeout(typeNextChar, 30);
+                } else {
+                    resolve();
+                }
+            };
+            typeNextChar();
+        });
     }
 }

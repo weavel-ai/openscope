@@ -89,33 +89,24 @@ export default class WebSocketManager {
         const parser = new CommandParser(command);
         const parsedCommand = parser.parse();
 
-        try {
-            let result;
-
-            if (parsedCommand.command !== PARSED_COMMAND_NAME.TRANSMIT) {
-                result = this.processSystemCommand(parsedCommand);
-            } else {
-                result = this.inputController.writeAndSubmitCommand(command);
-                // console.log("command", parsedCommand);
-                // const aircraft = this.aircraftController.findAircraftByCallsign(
-                //     parsedCommand.callsign
-                // );
-                // // console.log("aircraft", aircraft);
-                // if (!aircraft) {
-                //     console.error(
-                //         `Aircraft with callsign ${parsedCommand.callsign} not found`
-                //     );
-                //     return;
-                // }
-                // result = this.processTransmitCommand(aircraft, parsedCommand);
-                // console.log("result", result);
-            }
+        if (parsedCommand.command !== PARSED_COMMAND_NAME.TRANSMIT) {
+            const result = this.processSystemCommand(parsedCommand);
             this.sendResponse(correlation_id, result);
-            console.log("response sent");
-        } catch (error) {
-            console.error(`Command not understood: ${command}`);
-            console.error(error);
-            this.sendResponse(correlation_id, [false, error.message]);
+        } else {
+            this.inputController
+                .writeAndSubmitCommand(command)
+                .then((result) => {
+                    console.log("commandResult", result);
+                    if (result) {
+                        this.sendResponse(correlation_id, result);
+                        console.log("response sent");
+                    }
+                })
+                .catch((error) => {
+                    console.error(`Command not understood: ${command}`);
+                    console.error(error);
+                    this.sendResponse(correlation_id, [false, error.message]);
+                });
         }
     }
 
