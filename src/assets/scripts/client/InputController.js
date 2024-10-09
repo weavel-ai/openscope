@@ -67,6 +67,9 @@ export default class InputController {
         this.input.isMouseDown = false;
         this.commandBarContext = COMMAND_CONTEXT.AIRCRAFT;
 
+        this._commandQueue = [];
+        this._isProcessingCommand = false;
+
         this._init();
     }
 
@@ -1228,5 +1231,90 @@ export default class InputController {
         // Record mouse down position for panning
         this._mouseDownScreenPosition = [mousePositionX, mousePositionY];
         this.input.isMouseDown = true;
+    }
+
+    /**
+     * Types out the given text in the command input with a delay between each character
+     *
+     * @for InputController
+     * @method _typeChars
+     * @param text {string} The text to type out
+     * @returns {Promise} A promise that resolves when typing is complete
+     */
+    _typeChars(text) {
+        return new Promise((resolve) => {
+            const typeCharacter = (index) => {
+                if (index < text.length) {
+                    this.$commandInput.val(
+                        this.$commandInput.val() + text.charAt(index)
+                    );
+                    setTimeout(() => typeCharacter(index + 1), 30); // 30ms delay between characters
+                } else {
+                    resolve();
+                }
+            };
+
+            typeCharacter(0);
+        });
+    }
+
+    /**
+     * Writes text into the UI's input box and submits it
+     *
+     * @for InputController
+     * @method writeAndSubmitCommand
+     * @param text {string} The text to write and submit
+     */
+    writeAndSubmitCommand(text) {
+        this._commandQueue.push(text);
+        this._processNextCommand();
+    }
+
+    /**
+     * Processes the next command in the queue
+     *
+     * @for InputController
+     * @method _processNextCommand
+     * @private
+     */
+    _processNextCommand() {
+        if (this._isProcessingCommand || this._commandQueue.length === 0) {
+            return;
+        }
+
+        this._isProcessingCommand = true;
+        const text = this._commandQueue.shift();
+
+        this._typeChars(text).then(() => {
+            try {
+                const response = this.processAircraftCommand();
+
+                const parser = new CommandParser(text);
+                const parsedCommand = parser.parse();
+
+                const aircraftModel =
+                    this._aircraftController.findAircraftByCallsign(
+                        parsedCommand.callsign
+                    );
+
+                if (aircraftModel) {
+                    this._eventBus.trigger(
+                        EVENT.SELECT_AIRCRAFT,
+                        aircraftModel
+                    );
+                }
+                return response;
+            } catch (error) {
+                console.error(error);
+                return [false, error.message];
+            } finally {
+                // Clear the input after processing
+                setTimeout(() => {
+                    this.$commandInput.val("");
+                    this._isProcessingCommand = false;
+                    this._processNextCommand(); // Process next command in queue
+                }, 1000);
+            }
+        });
     }
 }

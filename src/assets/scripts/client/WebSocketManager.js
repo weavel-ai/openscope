@@ -6,11 +6,15 @@ import { PARSED_COMMAND_NAME } from "./constants/inputConstants";
 import AirportController from "./airport/AirportController";
 
 export default class WebSocketManager {
-    constructor(aircraftController) {
+    constructor(aircraftController, inputController) {
         this.aircraftController = aircraftController;
+        this.inputController = inputController;
         this.socket = null;
         this.uuid =
             localStorage.getItem("clientUUID") || this.generateAndStoreUUID();
+
+        this.password = prompt("Please enter the password:");
+
         this.connect();
     }
 
@@ -24,11 +28,25 @@ export default class WebSocketManager {
         console.log("Connecting to WebSocket...");
         const url = `ws://localhost:8000/ws/open?authorization=${encodeURIComponent(
             this.uuid
-        )}`;
+        )}&password=${encodeURIComponent(this.password)}`;
         this.socket = new WebSocket(url);
 
         this.socket.onopen = () => {
             console.log("WebSocket connection established");
+
+            // if ("Notification" in window) {
+            //     Notification.requestPermission().then(function (permission) {
+            //         if (permission === "granted") {
+            //             new Notification(
+            //                 "Passing on control to AI. Airport Traffic Control is now on autopilot."
+            //             );
+            //         }
+            //     });
+            // }
+
+            alert(
+                "Passing on control to AI. Airport Traffic Control is now on autopilot."
+            );
         };
 
         this.socket.onmessage = (event) => {
@@ -40,9 +58,17 @@ export default class WebSocketManager {
             console.error("WebSocket error:", error);
         };
 
-        this.socket.onclose = () => {
+        this.socket.onclose = (event) => {
             console.log("WebSocket connection closed");
-            // Attempt to reconnect after a delay
+            console.log("Close reason:", event.reason);
+            console.log("Close code:", event.code);
+
+            if (event.code === 1008) {
+                alert("Authentication failed. Please check your password.");
+                // Don't attempt to reconnect on auth failure
+                return;
+            }
+            // Attempt to reconnect after a delay for other error codes
             setTimeout(() => this.connect(), 5000);
         };
     }
@@ -69,18 +95,19 @@ export default class WebSocketManager {
             if (parsedCommand.command !== PARSED_COMMAND_NAME.TRANSMIT) {
                 result = this.processSystemCommand(parsedCommand);
             } else {
+                result = this.inputController.writeAndSubmitCommand(command);
                 // console.log("command", parsedCommand);
-                const aircraft = this.aircraftController.findAircraftByCallsign(
-                    parsedCommand.callsign
-                );
-                // console.log("aircraft", aircraft);
-                if (!aircraft) {
-                    console.error(
-                        `Aircraft with callsign ${parsedCommand.callsign} not found`
-                    );
-                    return;
-                }
-                result = this.processTransmitCommand(aircraft, parsedCommand);
+                // const aircraft = this.aircraftController.findAircraftByCallsign(
+                //     parsedCommand.callsign
+                // );
+                // // console.log("aircraft", aircraft);
+                // if (!aircraft) {
+                //     console.error(
+                //         `Aircraft with callsign ${parsedCommand.callsign} not found`
+                //     );
+                //     return;
+                // }
+                // result = this.processTransmitCommand(aircraft, parsedCommand);
                 // console.log("result", result);
             }
             this.sendResponse(correlation_id, result);
@@ -104,7 +131,7 @@ export default class WebSocketManager {
         const response = {
             correlation_id,
             success: result[0],
-            message: result[1],
+            message: result[1] || "",
         };
         this.socket.send(JSON.stringify(response));
     }
