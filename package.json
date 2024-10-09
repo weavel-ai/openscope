@@ -72,6 +72,7 @@
   },
   "dependencies": {
     "ansi-colors": "3.2.4",
+    "dotenv": "16.4.5",
     "express": "4.16.4",
     "handlebars": "4.1.2",
     "jquery": "3.5.0",

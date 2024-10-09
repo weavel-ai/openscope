@@ -191,9 +191,6 @@ export default class AppController {
         );
         this.scoreController = new ScoreController(this.aircraftController);
 
-        // Initialize WebSocketManager after aircraftController is created
-        this.webSocketManager = new WebSocketManager(this.aircraftController);
-
         SpawnScheduler.init(this.aircraftController);
 
         // TEMPORARY!
@@ -224,6 +221,12 @@ export default class AppController {
         this.changelogController = new ChangelogController(this.contentQueue);
 
         this.updateViewControls();
+
+        // Initialize WebSocketManager after aircraftController is created
+        this.webSocketManager = new WebSocketManager(
+            this.aircraftController,
+            this.inputController
+        );
     }
 
     /**

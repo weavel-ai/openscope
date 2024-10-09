@@ -1,7 +1,7 @@
-import $ from 'jquery';
-import App from './App';
+import $ from "jquery";
+import App from "./App";
 
-require('raf').polyfill();
+require("raf").polyfill();
 
 /**
  * Entry point for the application.
@@ -9,7 +9,7 @@ require('raf').polyfill();
  * Provides a way to grab the `body` element of the document and pass it to the app.
  */
 export default (() => {
-    const $body = $('body');
+    const $body = $("body");
     // eslint-disable-next-line no-unused-vars
     const app = new App($body);
 })();

@@ -13,3 +13,4 @@ public/
 assets/style/
 assets/scripts/
 yarn.lock
+.env
