@@ -31,6 +31,7 @@ import { FLIGHT_CATEGORY, FLIGHT_PHASE } from "../constants/aircraftConstants";
 import { EVENT, AIRCRAFT_EVENT } from "../constants/eventNames";
 import { GAME_OPTION_NAMES } from "../constants/gameOptionConstants";
 import { INVALID_INDEX } from "../constants/globalConstants";
+import { radiansToDegrees } from "../utilities/unitConverters";
 
 // Temporary const declaration here to attach to the window AND use as internal property
 const aircraft = {};
@@ -1055,7 +1056,7 @@ export default class AircraftController {
 
         this.aircraft.list.forEach((aircraft) => {
             aircraftsInfo[aircraft.callsign] = {
-                heading: aircraft.heading,
+                heading: radiansToDegrees(aircraft.heading),
                 altitude: aircraft.altitude,
                 speed: aircraft.speed,
                 trending: aircraft.trend,
