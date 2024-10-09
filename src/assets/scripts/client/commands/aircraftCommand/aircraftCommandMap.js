@@ -244,6 +244,11 @@ export const AIRCRAFT_COMMAND_MAP = {
         functionName: "getArrivalsInfo",
         isSystemCommand: true,
     },
+    getFixDetails: {
+        aliases: ["fd"],
+        functionName: "getFixDetails",
+        isSystemCommand: true,
+    },
 };
 
 /**

@@ -152,6 +152,10 @@ const ZERO_ARG_AIRCRAFT_COMMANDS = {
         validate: zeroArgumentsValidator,
         parse: noop,
     },
+    getFixDetails: {
+        validate: zeroArgumentsValidator,
+        parse: noop,
+    },
 };
 
 /**

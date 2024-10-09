@@ -4,6 +4,8 @@ import { INVALID_NUMBER } from "./constants/globalConstants";
 import { v4 as uuidv4 } from "uuid";
 import { PARSED_COMMAND_NAME } from "./constants/inputConstants";
 import AirportController from "./airport/AirportController";
+import FixCollection from "./navigationLibrary/FixCollection";
+import { radiansToDegrees } from "./utilities/unitConverters";
 
 export default class WebSocketManager {
     constructor(aircraftController, inputController) {
@@ -248,11 +250,25 @@ export default class WebSocketManager {
                 return [true, runwayDetails];
 
             case PARSED_COMMAND_NAME.AIRCRAFT_DETAILS:
-                // console.log("Running aircraft details command");
-                const aircraftDetails =
-                    this.aircraftController.getAircraftsInfo();
-                // console.log("Aircraft details:", aircraftDetails);
-                return [true, aircraftDetails];
+                const details = {};
+                this.aircraftController.aircraft.list
+                    .filter((aircraft) => aircraft.isControllable)
+                    .forEach((aircraft) => {
+                        details[aircraft.callsign] = {
+                            heading: radiansToDegrees(aircraft.heading),
+                            altitude: aircraft.altitude,
+                            speed: aircraft.speed,
+                            history: aircraft.history,
+                            flightPhase: aircraft.flightPhase,
+                            relativePosition: aircraft.relativePosition,
+                            arrivalRunway:
+                                aircraft.pilot._fms?.arrivalRunwayModel?.name ??
+                                null,
+                            relativePositionInOneMinute:
+                                aircraft.getRelativePositionInOneMinute(),
+                        };
+                    });
+                return [true, details];
 
             case PARSED_COMMAND_NAME.DEPARTURE_LIST:
                 // console.log("Running departure list command");
@@ -267,6 +283,10 @@ export default class WebSocketManager {
                     this.aircraftController._stripViewController.getArrivalsInfo();
                 // console.log("Arrival list:", arrivalList);
                 return [true, arrivalList];
+
+            case PARSED_COMMAND_NAME.FIX_DETAILS:
+                const fixDetails = FixCollection.findRealFixes();
+                return [true, fixDetails];
 
             default:
                 return [false, "Command not found"];
