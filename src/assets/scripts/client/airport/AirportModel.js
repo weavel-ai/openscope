@@ -1005,31 +1005,34 @@ export default class AirportModel {
      * Get detailed information for all runways
      *
      * @method getRunwayDetails
-     * @return {array} An array of objects, each containing detailed information about a runway
+     * @return {object} An object containing detailed information about each runway, keyed by runway name
      */
     getRunwayDetails() {
-        return this._runwayCollection.runways.map((runway) => ({
-            name: runway.name,
-            angle: runway.angle,
-            oppositeAngle: runway.oppositeAngle,
-            length: runway.length,
-            elevation: runway.elevation,
-            gps: runway.gps,
-            relativePosition: runway.relativePosition,
-            ils: {
-                enabled: runway.ils.enabled,
-                loc_maxDist: runway.ils.loc_maxDist,
-                glideslopeGradient: runway.ils.glideslopeGradient,
-            },
-            delay: runway.delay,
-            sepFromAdjacent: runway.sepFromAdjacent,
-            positionModel: {
-                relativePosition: runway.positionModel.relativePosition,
-                gps: runway.positionModel.gps,
-                elevation: runway.positionModel.elevation,
-                x: runway.positionModel.x,
-                y: runway.positionModel.y,
-            },
-        }));
+        return this._runwayCollection.runways.reduce((acc, runway) => {
+            acc[runway.name] = {
+                start_relative_x: runway._positionModel.x,
+                start_relative_y: runway._positionModel.y,
+                angle: runway.angle,
+                length: runway.length,
+                taxi_queue: runway.queue.map((aircraftId) => {
+                    const aircraft =
+                        window.AircraftController.findAircraftById(aircraftId);
+                    return aircraft ? aircraft.callsign : aircraftId;
+                }),
+                gps: runway.gps,
+            };
+            return acc;
+        }, {});
     }
+
+    // _isRunwayOccupied(runwayName) {
+    //     const aircraftController = window.aircraftController;
+    //     const aircraft = aircraftController.aircraft;
+
+    //     return aircraft.some((ac) => {
+    //         const isOnRunway = ac.isOnRunway();
+    //         const isUsingRunway = ac.fms.currentRunwayName === runwayName;
+    //         return isOnRunway && isUsingRunway;
+    //     });
+    // }
 }

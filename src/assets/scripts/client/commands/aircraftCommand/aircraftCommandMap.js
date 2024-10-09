@@ -224,9 +224,24 @@ export const AIRCRAFT_COMMAND_MAP = {
         functionName: "",
         isSystemCommand: true,
     },
-    sayRunwayDetails: {
+    getRunwayDetails: {
         aliases: ["rd"],
         functionName: "getRunwayDetails",
+        isSystemCommand: true,
+    },
+    getAircraftsInfo: {
+        aliases: ["ad"],
+        functionName: "getAircraftsInfo",
+        isSystemCommand: true,
+    },
+    getDeparturesInfo: {
+        aliases: ["departure"],
+        functionName: "getDeparturesInfo",
+        isSystemCommand: true,
+    },
+    getArrivalsInfo: {
+        aliases: ["arrival"],
+        functionName: "getArrivalsInfo",
         isSystemCommand: true,
     },
 };

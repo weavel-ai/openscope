@@ -1,10 +1,10 @@
-import $ from 'jquery';
-import _random from 'lodash/random';
-import _without from 'lodash/without';
-import StripViewCollection from './StripViewCollection';
-import StripViewModel from './StripViewModel';
-import { INVALID_INDEX } from '../../constants/globalConstants';
-import { SELECTORS } from '../../constants/selectors';
+import $ from "jquery";
+import _random from "lodash/random";
+import _without from "lodash/without";
+import StripViewCollection from "./StripViewCollection";
+import StripViewModel from "./StripViewModel";
+import { INVALID_INDEX } from "../../constants/globalConstants";
+import { SELECTORS } from "../../constants/selectors";
 
 /**
  * The highest number allowed for a cid value
@@ -51,7 +51,9 @@ export default class StripViewController {
          * @property $stripViewListArrivals
          * @type {JQuery|HTMLElement}
          */
-        this.$stripViewListArrivals = $(SELECTORS.DOM_SELECTORS.STRIP_VIEW_ARRIVALS_LIST);
+        this.$stripViewListArrivals = $(
+            SELECTORS.DOM_SELECTORS.STRIP_VIEW_ARRIVALS_LIST
+        );
 
         /**
          * List element containing each `StripViewModel` instance that is a Departure
@@ -59,7 +61,9 @@ export default class StripViewController {
          * @property $stripViewListDepartures
          * @type {JQuery|HTMLElement}
          */
-        this.$stripViewListDepartures = $(SELECTORS.DOM_SELECTORS.STRIP_VIEW_DEPARTURES_LIST);
+        this.$stripViewListDepartures = $(
+            SELECTORS.DOM_SELECTORS.STRIP_VIEW_DEPARTURES_LIST
+        );
 
         /**
          * Trigger that toggles visibility of the `$stripView`
@@ -76,8 +80,7 @@ export default class StripViewController {
          */
         this._cidNumbersInUse = [];
 
-        return this._init()
-            .enable();
+        return this._init().enable();
     }
 
     /**
@@ -102,9 +105,15 @@ export default class StripViewController {
      * @chainable
      */
     enable() {
-        this.$stripListTrigger.on('click', this._onStripListToggle);
-        this.$stripViewListArrivals.on('click', this._onStripListClickOutsideStripViewModel);
-        this.$stripViewListDepartures.on('click', this._onStripListClickOutsideStripViewModel);
+        this.$stripListTrigger.on("click", this._onStripListToggle);
+        this.$stripViewListArrivals.on(
+            "click",
+            this._onStripListClickOutsideStripViewModel
+        );
+        this.$stripViewListDepartures.on(
+            "click",
+            this._onStripListClickOutsideStripViewModel
+        );
 
         return this;
     }
@@ -128,9 +137,11 @@ export default class StripViewController {
      * @returns {booelan}
      */
     hasStripViewModel(aircraftModel) {
-        const stripViewModel = this._collection.findStripByAircraftId(aircraftModel.id);
+        const stripViewModel = this._collection.findStripByAircraftId(
+            aircraftModel.id
+        );
 
-        return typeof stripViewModel !== 'undefined';
+        return typeof stripViewModel !== "undefined";
     }
 
     /**
@@ -155,11 +166,13 @@ export default class StripViewController {
                 continue;
             }
 
-            let stripViewModel = this._collection.findStripByAircraftId(aircraftModel.id);
+            let stripViewModel = this._collection.findStripByAircraftId(
+                aircraftModel.id
+            );
 
             // Here we create the StripViewModel for ARRIVALS at the moment they become
             // "controllable". By contrast, departure strips are created immediately.
-            if (typeof stripViewModel === 'undefined') {
+            if (typeof stripViewModel === "undefined") {
                 stripViewModel = this.createStripView(aircraftModel);
             }
 
@@ -196,10 +209,14 @@ export default class StripViewController {
      * @param  aircraftModel {AircraftModel}
      */
     selectStripView(aircraftModel) {
-        const stripModel = this._collection.findStripByAircraftId(aircraftModel.id);
+        const stripModel = this._collection.findStripByAircraftId(
+            aircraftModel.id
+        );
 
         if (!stripModel) {
-            throw Error(`No StripViewModel found for selected Aircraft: ${aircraftModel.callsign}`);
+            throw Error(
+                `No StripViewModel found for selected Aircraft: ${aircraftModel.callsign}`
+            );
         }
 
         this.findAndDeselectActiveStripView();
@@ -216,8 +233,10 @@ export default class StripViewController {
      */
     deselectStripView(stripViewModel) {
         if (!(stripViewModel instanceof StripViewModel)) {
-            throw new TypeError('Expected stripViewModel to be an instance of ' +
-                `StripViewModel but instead found ${typeof stripViewModel}`);
+            throw new TypeError(
+                "Expected stripViewModel to be an instance of " +
+                    `StripViewModel but instead found ${typeof stripViewModel}`
+            );
         }
 
         stripViewModel.removeActiveState();
@@ -231,14 +250,22 @@ export default class StripViewController {
      * @param  aircraftModel {AircraftModel}
      */
     scrollToStripView(aircraftModel) {
-        const stripModel = this._collection.findStripByAircraftId(aircraftModel.id);
+        const stripModel = this._collection.findStripByAircraftId(
+            aircraftModel.id
+        );
 
         if (!stripModel) {
-            throw Error(`No StripViewModel found for selected Aircraft: ${aircraftModel.callsign}`);
+            throw Error(
+                `No StripViewModel found for selected Aircraft: ${aircraftModel.callsign}`
+            );
         }
 
-        if (this.$stripView.hasClass(SELECTORS.CLASSNAMES.STRIP_VIEW_IS_HIDDEN)) {
-            this.$stripView.removeClass(SELECTORS.CLASSNAMES.STRIP_VIEW_IS_HIDDEN);
+        if (
+            this.$stripView.hasClass(SELECTORS.CLASSNAMES.STRIP_VIEW_IS_HIDDEN)
+        ) {
+            this.$stripView.removeClass(
+                SELECTORS.CLASSNAMES.STRIP_VIEW_IS_HIDDEN
+            );
             // wait 0.3s for strip view drawer slide out transition to complete
             setTimeout(() => {
                 stripModel.scrollIntoView();
@@ -261,7 +288,8 @@ export default class StripViewController {
      * @private
      */
     findAndDeselectActiveStripView() {
-        const activeStripViewModel = this._collection.findActiveStripViewModel();
+        const activeStripViewModel =
+            this._collection.findActiveStripViewModel();
 
         if (!activeStripViewModel) {
             return;
@@ -278,7 +306,9 @@ export default class StripViewController {
      * @param aircraftModel {AircraftModel}
      */
     removeStripView(aircraftModel) {
-        const stripViewModel = this._collection.findStripByAircraftId(aircraftModel.id);
+        const stripViewModel = this._collection.findStripByAircraftId(
+            aircraftModel.id
+        );
 
         if (!stripViewModel) {
             return;
@@ -302,10 +332,14 @@ export default class StripViewController {
      */
     _addViewToStripList(stripViewModel) {
         if (!(stripViewModel instanceof StripViewModel)) {
-            throw new TypeError(`Expected an instance of StripViewModel but received ${typeof stripViewModel}`);
+            throw new TypeError(
+                `Expected an instance of StripViewModel but received ${typeof stripViewModel}`
+            );
         }
 
-        const listView = stripViewModel.isDeparture ? this.$stripViewListDepartures : this.$stripViewListArrivals;
+        const listView = stripViewModel.isDeparture
+            ? this.$stripViewListDepartures
+            : this.$stripViewListArrivals;
         const scrollPosition = listView.scrollTop();
 
         listView.prepend(stripViewModel.$element);
@@ -336,7 +370,8 @@ export default class StripViewController {
      * @private
      */
     // eslint-disable-next-line no-unused-vars
-    _onStripListClickOutsideStripViewModel = (event) => this.findAndDeselectActiveStripView();
+    _onStripListClickOutsideStripViewModel = (event) =>
+        this.findAndDeselectActiveStripView();
 
     /**
      * Generate a unique number to represent a `CID`
@@ -378,5 +413,57 @@ export default class StripViewController {
         }
 
         this._cidNumbersInUse = _without(this._cidNumbersInUse, cid);
+    }
+
+    /**
+     * Get detailed information for all departure strip views
+     *
+     * @for StripViewController
+     * @method getDeparturesInfo
+     * @return {Object} An object containing detailed information for each departure strip view, keyed by aircraft id
+     */
+    getDeparturesInfo() {
+        const departureStripViewsInfo = {};
+
+        // console.log("this._collection._items", this._collection._items);
+
+        this._collection._items.forEach((stripViewModel) => {
+            if (stripViewModel.isDeparture) {
+                departureStripViewsInfo[stripViewModel._callsign] = {
+                    requestedAltitude: stripViewModel._assignedAltitude ?? null,
+                    requestedDepartureRunway:
+                        stripViewModel._runwayInformation?.name || null,
+                    // flightPlan: stripViewModel._flightPlan,
+                };
+            }
+        });
+
+        return departureStripViewsInfo;
+    }
+
+    /**
+     * Get detailed information for all arrival strip views
+     *
+     * @for StripViewController
+     * @method getArrivalsInfo
+     * @return {Object} An object containing detailed information for each arrival strip view, keyed by aircraft id
+     */
+    getArrivalsInfo() {
+        const arrivalStripViewsInfo = {};
+
+        // console.log("this._collection._items", this._collection._items);
+
+        this._collection._items.forEach((stripViewModel) => {
+            if (!stripViewModel.isDeparture) {
+                arrivalStripViewsInfo[stripViewModel._callsign] = {
+                    requestedAltitude: stripViewModel._assignedAltitude ?? null,
+                    requestedArrivalRunway:
+                        stripViewModel._runwayInformation?.name || null,
+                    // flightPlan: stripViewModel._flightPlan,
+                };
+            }
+        });
+
+        return arrivalStripViewsInfo;
     }
 }

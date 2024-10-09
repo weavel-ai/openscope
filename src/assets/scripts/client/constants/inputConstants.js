@@ -151,4 +151,7 @@ export const PARSED_COMMAND_NAME = {
     TRANSMIT: "transmit",
     TUTORIAL: "tutorial",
     RUNWAY_DETAILS: "getRunwayDetails",
+    AIRCRAFT_DETAILS: "getAircraftsInfo",
+    DEPARTURE_LIST: "getDeparturesInfo",
+    ARRIVAL_LIST: "getArrivalsInfo",
 };

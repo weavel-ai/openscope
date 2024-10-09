@@ -584,10 +584,10 @@ export default class AircraftCommander {
      * Get and return the runway details for the airport
      *
      * @for AircraftCommander
-     * @method runSayRunwayDetails
+     * @method runGetRunwayDetails
      * @return {array} [success of operation, response]
      */
-    runSayRunwayDetails() {
+    runGetRunwayDetails() {
         const airportModel = AirportController.airport_get();
         const runwayDetails = airportModel.getRunwayDetails();
 

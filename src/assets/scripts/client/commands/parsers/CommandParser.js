@@ -1,15 +1,15 @@
-import _compact from 'lodash/compact';
-import _forEach from 'lodash/forEach';
-import _isString from 'lodash/isString';
-import _map from 'lodash/map';
-import _tail from 'lodash/tail';
-import AircraftCommandModel from '../aircraftCommand/AircraftCommandModel';
+import _forEach from "lodash/forEach";
+import _compact from "lodash/compact";
+import _isString from "lodash/isString";
+import _map from "lodash/map";
+import _tail from "lodash/tail";
+import AircraftCommandModel from "../aircraftCommand/AircraftCommandModel";
 import {
     AIRCRAFT_COMMAND_MAP,
-    findCommandNameWithAlias
-} from '../aircraftCommand/aircraftCommandMap';
-import { PARSED_COMMAND_NAME } from '../../constants/inputConstants';
-import ParsedCommand from '../ParsedCommand';
+    findCommandNameWithAlias,
+} from "../aircraftCommand/aircraftCommandMap";
+import { PARSED_COMMAND_NAME } from "../../constants/inputConstants";
+import ParsedCommand from "../ParsedCommand";
 
 /**
  * Symbol used to split the command string as it enters the class.
@@ -18,7 +18,7 @@ import ParsedCommand from '../ParsedCommand';
  * @type {string}
  * @final
  */
-const COMMAND_ARGS_SEPARATOR = ' ';
+const COMMAND_ARGS_SEPARATOR = " ";
 
 /**
  * This class is responsible for taking the content of the `$commandInput` and parsing it
@@ -64,11 +64,13 @@ export default class CommandParser {
      * @for CommandParser
      * @param rawCommandWithArgs {string}  string present in the `$commandInput` when the user pressed `enter`
      */
-    constructor(rawCommandWithArgs = '') {
+    constructor(rawCommandWithArgs = "") {
         if (!_isString(rawCommandWithArgs)) {
             // istanbul ignore next
             // eslint-disable-next-line max-len
-            throw new TypeError(`Invalid parameter. AircraftCommandParser expects a string but received ${typeof rawCommandWithArgs}`);
+            throw new TypeError(
+                `Invalid parameter. AircraftCommandParser expects a string but received ${typeof rawCommandWithArgs}`
+            );
         }
 
         /**
@@ -82,7 +84,7 @@ export default class CommandParser {
          * @type {string}
          * @default ''
          */
-        this.command = '';
+        this.command = "";
 
         /**
          * Aircraft callsign
@@ -92,7 +94,7 @@ export default class CommandParser {
          * @type {string}
          * @default ''
          */
-        this.callsign = '';
+        this.callsign = "";
 
         /**
          * List of `AircraftCommandModel` objects.
@@ -128,18 +130,25 @@ export default class CommandParser {
      */
     _extractCommandsAndArgs(rawCommandWithArgs) {
         const commandOrCallsignIndex = 0;
-        const commandArgSegmentsWithCallsign = rawCommandWithArgs.split(COMMAND_ARGS_SEPARATOR).filter((t) => t);
-        const callsignOrSystemCommandName = commandArgSegmentsWithCallsign[commandOrCallsignIndex];
+        const commandArgSegmentsWithCallsign = rawCommandWithArgs
+            .split(COMMAND_ARGS_SEPARATOR)
+            .filter((t) => t);
+        const callsignOrSystemCommandName =
+            commandArgSegmentsWithCallsign[commandOrCallsignIndex];
         // effectively a slice of the array that returns everything but the first item
         const commandArgSegments = _tail(commandArgSegmentsWithCallsign);
 
         if (this._isSystemCommand(callsignOrSystemCommandName)) {
+            // console.log("System command:", callsignOrSystemCommandName);
             this._buildSystemCommandModel(commandArgSegmentsWithCallsign);
 
             return;
         }
 
-        this._buildTransmitAircraftCommandModels(callsignOrSystemCommandName, commandArgSegments);
+        this._buildTransmitAircraftCommandModels(
+            callsignOrSystemCommandName,
+            commandArgSegments
+        );
     }
 
     /**
@@ -152,13 +161,15 @@ export default class CommandParser {
     _buildSystemCommandModel(commandArgSegments) {
         const commandIndex = 0;
         const argIndex = 1;
-        const commandName = findCommandNameWithAlias(commandArgSegments[commandIndex]);
+        const commandName = findCommandNameWithAlias(
+            commandArgSegments[commandIndex]
+        );
         const commandArgs = commandArgSegments[argIndex];
         const aircraftCommandModel = new AircraftCommandModel(commandName);
 
         // undefined will happen with zeroArgument system commands, so we check for that here
         // and add only when args are defined
-        if (typeof commandArgs !== 'undefined') {
+        if (typeof commandArgs !== "undefined") {
             aircraftCommandModel.args.push(commandArgs);
         }
 
@@ -173,7 +184,10 @@ export default class CommandParser {
      *
      * @private
      */
-    _buildTransmitAircraftCommandModels(callsignOrSystemCommandName, commandArgSegments) {
+    _buildTransmitAircraftCommandModels(
+        callsignOrSystemCommandName,
+        commandArgSegments
+    ) {
         this.command = PARSED_COMMAND_NAME.TRANSMIT;
         this.callsign = callsignOrSystemCommandName;
         this.commandList = this._buildCommandList(commandArgSegments);
@@ -208,14 +222,14 @@ export default class CommandParser {
             const commandOrArg = commandArgSegments[i];
             const commandName = findCommandNameWithAlias(commandOrArg);
 
-            if (typeof aircraftCommandModel === 'undefined') {
-                if (typeof commandName === 'undefined') {
+            if (typeof aircraftCommandModel === "undefined") {
+                if (typeof commandName === "undefined") {
                     continue;
                 }
 
                 aircraftCommandModel = new AircraftCommandModel(commandName);
             } else {
-                if (typeof commandName === 'undefined') {
+                if (typeof commandName === "undefined") {
                     aircraftCommandModel.args.push(commandOrArg);
 
                     continue;
@@ -260,7 +274,8 @@ export default class CommandParser {
      */
     _validateCommandArguments() {
         const validatedCommandList = _map(this.commandList, (command) => {
-            if (typeof command === 'undefined') {
+            // console.log("command", command);
+            if (typeof command === "undefined") {
                 return null;
             }
 
@@ -289,12 +304,13 @@ export default class CommandParser {
      * @return {boolean}
      */
     _isSystemCommand(callsignOrSystemCommandName) {
-        const commandName = findCommandNameWithAlias(callsignOrSystemCommandName);
+        const commandName = findCommandNameWithAlias(
+            callsignOrSystemCommandName
+        );
 
-        if (typeof commandName === 'undefined') {
+        if (typeof commandName === "undefined") {
             return false;
         }
-
         return AIRCRAFT_COMMAND_MAP[commandName].isSystemCommand;
     }
 }

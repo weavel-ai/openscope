@@ -63,27 +63,31 @@ export default class WebSocketManager {
         const parser = new CommandParser(command);
         const parsedCommand = parser.parse();
 
-        const aircraft = this.aircraftController.findAircraftByCallsign(
-            parsedCommand.callsign
-        );
-
-        if (!aircraft) {
-            console.error(
-                `Aircraft with callsign ${parsedCommand.callsign} not found`
-            );
-            return;
-        }
-
         try {
             let result;
+
             if (parsedCommand.command !== PARSED_COMMAND_NAME.TRANSMIT) {
                 result = this.processSystemCommand(parsedCommand);
             } else {
-                result = this.processTransmitCommand(aircraft, [parsedCommand]);
+                // console.log("command", parsedCommand);
+                const aircraft = this.aircraftController.findAircraftByCallsign(
+                    parsedCommand.callsign
+                );
+                // console.log("aircraft", aircraft);
+                if (!aircraft) {
+                    console.error(
+                        `Aircraft with callsign ${parsedCommand.callsign} not found`
+                    );
+                    return;
+                }
+                result = this.processTransmitCommand(aircraft, parsedCommand);
+                // console.log("result", result);
             }
             this.sendResponse(correlation_id, result);
+            console.log("response sent");
         } catch (error) {
             console.error(`Command not understood: ${command}`);
+            console.error(error);
             this.sendResponse(correlation_id, [false, error.message]);
         }
     }
@@ -111,17 +115,13 @@ export default class WebSocketManager {
      * @param parsedCommand {ParsedCommand}
      * @return {boolean}
      */
-    processTransmitCommand(parsedCommand) {
+    processTransmitCommand(aircraft, parsedCommand) {
         // TODO: abstract the aircraft callsign matching
         let matches = 0;
         let match = INVALID_NUMBER;
 
-        for (
-            let i = 0;
-            i < this._aircraftController.aircraft.list.length;
-            i++
-        ) {
-            const aircraft = this._aircraftController.aircraft.list[i];
+        for (let i = 0; i < this.aircraftController.aircraft.list.length; i++) {
+            const aircraft = this.aircraftController.aircraft.list[i];
 
             if (aircraft.matchCallsign(parsedCommand.callsign)) {
                 matches += 1;
@@ -137,11 +137,15 @@ export default class WebSocketManager {
             throw new Error("no such aircraft, say again");
         }
 
-        const aircraft = this.aircraftController.aircraft.list[match];
-
-        return this.aircraftController.aircraftCommander.run(
-            aircraft,
-            parsedCommand.args
+        return parsedCommand.commandList.reduce(
+            (_, command) => {
+                return this.aircraftController.aircraftCommander.run(
+                    aircraft,
+                    command.name,
+                    command.args
+                );
+            },
+            [true, ""]
         );
     }
 
@@ -152,12 +156,35 @@ export default class WebSocketManager {
      * @return {array} [success of operation, response]
      */
     processSystemCommand(parsedCommand) {
+        // console.log("parsedCommand in processSystemCommand", parsedCommand);
         switch (parsedCommand.command) {
             case PARSED_COMMAND_NAME.RUNWAY_DETAILS:
+                // console.log("Running runway details command");
                 const airportModel = AirportController.airport_get();
                 const runwayDetails = airportModel.getRunwayDetails();
-
+                // console.log("Runway details:", runwayDetails);
                 return [true, runwayDetails];
+
+            case PARSED_COMMAND_NAME.AIRCRAFT_DETAILS:
+                // console.log("Running aircraft details command");
+                const aircraftDetails =
+                    this.aircraftController.getAircraftsInfo();
+                // console.log("Aircraft details:", aircraftDetails);
+                return [true, aircraftDetails];
+
+            case PARSED_COMMAND_NAME.DEPARTURE_LIST:
+                // console.log("Running departure list command");
+                const departureList =
+                    this.aircraftController._stripViewController.getDeparturesInfo();
+                // console.log("Departure list:", departureList);
+                return [true, departureList];
+
+            case PARSED_COMMAND_NAME.ARRIVAL_LIST:
+                // console.log("Running arrival list command");
+                const arrivalList =
+                    this.aircraftController._stripViewController.getArrivalsInfo();
+                // console.log("Arrival list:", arrivalList);
+                return [true, arrivalList];
 
             default:
                 return [false, "Command not found"];

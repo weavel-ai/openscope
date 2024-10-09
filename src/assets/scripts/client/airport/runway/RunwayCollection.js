@@ -1,10 +1,10 @@
-import _find from 'lodash/find';
-import _forEach from 'lodash/forEach';
-import _isNil from 'lodash/isNil';
-import BaseCollection from '../../base/BaseCollection';
-import RunwayModel from './RunwayModel';
-import RunwayRelationshipModel from './RunwayRelationshipModel';
-import { isEmptyOrNotArray } from '../../utilities/validatorUtilities';
+import _find from "lodash/find";
+import _forEach from "lodash/forEach";
+import _isNil from "lodash/isNil";
+import BaseCollection from "../../base/BaseCollection";
+import RunwayModel from "./RunwayModel";
+import RunwayRelationshipModel from "./RunwayRelationshipModel";
+import { isEmptyOrNotArray } from "../../utilities/validatorUtilities";
 
 /**
  * Collection of `RunwayModel`s
@@ -24,14 +24,18 @@ export default class RunwayCollection extends BaseCollection {
         super();
 
         if (_isNil(runwayJson) || _isNil(airportPositionModel)) {
-            throw new TypeError('Invalid parameter(s) passed to RunwayCollection constructor. ' +
-                'Expected runwayJson and airportPositionModel to be defined, ' +
-                `but received ${typeof runwayJson} and ${typeof airportPositionModel}`);
+            throw new TypeError(
+                "Invalid parameter(s) passed to RunwayCollection constructor. " +
+                    "Expected runwayJson and airportPositionModel to be defined, " +
+                    `but received ${typeof runwayJson} and ${typeof airportPositionModel}`
+            );
         }
 
         if (isEmptyOrNotArray(runwayJson)) {
-            throw new TypeError('Invalid runwayJson passed to RunwayCollection constructor. ' +
-                `Expected a non-empty array, but received ${typeof runwayJson}`);
+            throw new TypeError(
+                "Invalid runwayJson passed to RunwayCollection constructor. " +
+                    `Expected a non-empty array, but received ${typeof runwayJson}`
+            );
         }
 
         /**
@@ -119,7 +123,7 @@ export default class RunwayCollection extends BaseCollection {
      * @return bestRunway {string}
      */
     findBestRunwayForWind(getCurrentWindProps) {
-        let bestRunway = '';
+        let bestRunway = "";
         let bestRunwayHeadwind = -Infinity;
         const headwind = {};
         const wind = getCurrentWindProps();
@@ -127,7 +131,8 @@ export default class RunwayCollection extends BaseCollection {
         for (let i = 0; i < this._items.length; i++) {
             const runway = this._items[i];
 
-            headwind[runway.name] = Math.cos(runway.angle - wind.angle) * wind.speed;
+            headwind[runway.name] =
+                Math.cos(runway.angle - wind.angle) * wind.speed;
         }
 
         for (const runway in headwind) {
@@ -166,7 +171,7 @@ export default class RunwayCollection extends BaseCollection {
      * @param
      * @return {RunwayModel|null}
      */
-    findRunwayModelByName(runwayName = '') {
+    findRunwayModelByName(runwayName = "") {
         return _find(this._items, { name: runwayName.toUpperCase() }) || null;
     }
 
@@ -177,8 +182,13 @@ export default class RunwayCollection extends BaseCollection {
      * @param  comparatorRunwayName {string}
      * @return {boolean}
      */
-    getRunwayRelationshipForRunwayNames(primaryRunwayName, comparatorRunwayName) {
-        return this._runwayRelationships[primaryRunwayName.toUpperCase()][comparatorRunwayName.toUpperCase()];
+    getRunwayRelationshipForRunwayNames(
+        primaryRunwayName,
+        comparatorRunwayName
+    ) {
+        return this._runwayRelationships[primaryRunwayName.toUpperCase()][
+            comparatorRunwayName.toUpperCase()
+        ];
     }
 
     /**
@@ -206,8 +216,12 @@ export default class RunwayCollection extends BaseCollection {
      */
     _buildRunwayModels(runwayJson) {
         _forEach(runwayJson, (runway) => {
-            this._addRunwayToCollection(new RunwayModel(runway, 0, this._airportPositionModel));
-            this._addRunwayToCollection(new RunwayModel(runway, 1, this._airportPositionModel));
+            this._addRunwayToCollection(
+                new RunwayModel(runway, 0, this._airportPositionModel)
+            );
+            this._addRunwayToCollection(
+                new RunwayModel(runway, 1, this._airportPositionModel)
+            );
         });
     }
 
@@ -251,10 +265,9 @@ export default class RunwayCollection extends BaseCollection {
             const comparatorRunway = this._items[i];
 
             if (runwayModel.name !== comparatorRunway.name) {
-                this._runwayRelationships[runwayModel.name][comparatorRunway.name] = new RunwayRelationshipModel(
-                    runwayModel,
-                    comparatorRunway
-                );
+                this._runwayRelationships[runwayModel.name][
+                    comparatorRunway.name
+                ] = new RunwayRelationshipModel(runwayModel, comparatorRunway);
             }
         }
     }

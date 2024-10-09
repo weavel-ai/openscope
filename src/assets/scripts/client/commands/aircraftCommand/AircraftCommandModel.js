@@ -1,4 +1,4 @@
-import { AIRCRAFT_COMMAND_DEFINITION } from './aircraftCommandDefinitions';
+import { AIRCRAFT_COMMAND_DEFINITION } from "./aircraftCommandDefinitions";
 
 /**
  * A definition of a specific command and it's arguments.
@@ -18,7 +18,7 @@ export default class AircraftCommandModel {
      * @constructor
      * @for AircraftCommandModel
      */
-    constructor(name = '') {
+    constructor(name = "") {
         /**
          * command name, should match a command in the COMMANDS constant
          *
@@ -69,10 +69,7 @@ export default class AircraftCommandModel {
      * @return {array}
      */
     get nameAndArgs() {
-        return [
-            this.name,
-            ...this.args
-        ];
+        return [this.name, ...this.args];
     }
 
     /**
@@ -83,7 +80,7 @@ export default class AircraftCommandModel {
      * @return {string|undefined}
      */
     validateArgs() {
-        if (typeof this._commandDefinition === 'undefined') {
+        if (typeof this._commandDefinition === "undefined") {
             return;
         }
 
