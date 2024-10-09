@@ -67,7 +67,7 @@ export default class InputController {
         this.input.isMouseDown = false;
         this.commandBarContext = COMMAND_CONTEXT.AIRCRAFT;
 
-        this._commandQueue = [];
+        this._commandQueueMap = {};
         this._isProcessingCommand = false;
 
         this._init();
@@ -1028,13 +1028,13 @@ export default class InputController {
                 true
             );
 
-            return true;
+            return [false, "multiple aircraft match the callsign, say again"];
         }
 
         if (match === INVALID_NUMBER) {
             UiController.ui_log("no such aircraft, say again", true);
 
-            return true;
+            return [false, "no such aircraft, say again"];
         }
 
         const aircraft = this._aircraftController.aircraft.list[match];
@@ -1241,21 +1241,27 @@ export default class InputController {
      * @param text {string} The text to write and submit
      * @returns {Promise<Array>} A promise that resolves with the result of the command
      */
-    writeAndSubmitCommand(text) {
-        this._commandQueue.push(text);
-        return this._processNextCommand();
+    writeAndSubmitCommand(correlation_id, command, onSuccess, onError) {
+        this._commandQueueMap[correlation_id] = command;
+        return this._processNextCommand(correlation_id, onSuccess, onError);
     }
 
     /**
-     * Processes the next command in the queue
+     * Processes the next command in the queue based on the provided correlation ID.
      *
      * @for InputController
      * @method _processNextCommand
      * @private
-     * @returns {Promise<Array>} A promise that resolves with the result of the command
+     * @param {string} correlation_id - The unique identifier for the command.
+     * @param {Function} onSuccess - Callback to execute upon successful processing.
+     * @param {Function} onError - Callback to execute if an error occurs.
+     * @returns {Promise<Array>} A promise that resolves with the result of the command.
      */
-    _processNextCommand() {
-        if (this._isProcessingCommand || this._commandQueue.length === 0) {
+    _processNextCommand(correlation_id, onSuccess, onError) {
+        if (
+            this._isProcessingCommand ||
+            !this._commandQueueMap.hasOwnProperty(correlation_id)
+        ) {
             console.debug(
                 "No command to process or already processing a command."
             );
@@ -1263,13 +1269,28 @@ export default class InputController {
         }
 
         this._isProcessingCommand = true;
-        const text = this._commandQueue.shift();
-        console.debug(`Processing command: ${text}`);
+        const text = this._commandQueueMap[correlation_id];
+        console.debug(
+            `Processing command [Correlation ID: ${correlation_id}]: ${text}`
+        );
+
+        // Remove the command from the queue map to prevent re-processing
+        delete this._commandQueueMap[correlation_id];
 
         return new Promise((resolve) => {
-            const parser = new CommandParser(text);
-            const parsedCommand = parser.parse();
-            console.debug("Parsed command:", parsedCommand);
+            let parsedCommand;
+            try {
+                const parser = new CommandParser(text);
+                parsedCommand = parser.parse();
+            } catch (error) {
+                console.error("Command parsing failed:", error);
+                if (typeof onError === "function") {
+                    onError(correlation_id, error.message);
+                }
+                this._isProcessingCommand = false;
+                resolve();
+                return;
+            }
 
             const aircraftModel =
                 this._aircraftController.findAircraftByCallsign(
@@ -1288,23 +1309,55 @@ export default class InputController {
 
             this._typeChars(text)
                 .then(() => {
-                    const response = this.processAircraftCommand();
-                    console.debug("Command processed with response:", response);
-                    resolve([true, ""]);
+                    let response;
+                    try {
+                        response = this.processAircraftCommand();
+                        console.debug(
+                            "Command processed with response:",
+                            response
+                        );
+                        if (response[0]) {
+                            onSuccess(correlation_id, response[1]);
+                        } else {
+                            onError(correlation_id, response[1]);
+                        }
+                        resolve();
+                    } catch (error) {
+                        console.error("Error processing command:", error);
+                        if (typeof onError === "function") {
+                            onError(correlation_id, error.message);
+                        }
+                        resolve();
+                    }
                 })
                 .catch((error) => {
-                    console.error("Error processing command:", error);
-                    resolve([false, error.message]);
+                    console.error("Error typing characters:", error);
+                    if (typeof onError === "function") {
+                        onError(correlation_id, error.message);
+                    }
+                    resolve();
                 })
                 .finally(() => {
                     // Clear the input after processing
                     setTimeout(() => {
                         this.$commandInput.val("");
                         this._isProcessingCommand = false;
-                        console.debug(
-                            "Command input cleared and ready for next command."
-                        );
-                        this._processNextCommand(); // Process next command in queue
+                        // Attempt to process the next command in the queue
+                        // Iterate over remaining correlation IDs
+                        for (const nextCorrelationId in this._commandQueueMap) {
+                            if (
+                                this._commandQueueMap.hasOwnProperty(
+                                    nextCorrelationId
+                                )
+                            ) {
+                                this._processNextCommand(
+                                    nextCorrelationId,
+                                    onSuccess,
+                                    onError
+                                );
+                                break; // Process one command at a time
+                            }
+                        }
                     }, 800);
                 });
         });

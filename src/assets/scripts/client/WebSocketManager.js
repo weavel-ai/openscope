@@ -93,20 +93,20 @@ export default class WebSocketManager {
             const result = this.processSystemCommand(parsedCommand);
             this.sendResponse(correlation_id, result);
         } else {
-            this.inputController
-                .writeAndSubmitCommand(command)
-                .then((result) => {
-                    console.log("commandResult", result);
-                    if (result) {
-                        this.sendResponse(correlation_id, result);
-                        console.log("response sent");
-                    }
-                })
-                .catch((error) => {
-                    console.error(`Command not understood: ${command}`);
+            this.inputController.writeAndSubmitCommand(
+                correlation_id,
+                command,
+                (correlation_id, message) => {
+                    console.log("commandResult", message);
+                    this.sendResponse(correlation_id, [true, message || ""]);
+                    console.log("response sent");
+                },
+                (correlation_id, error) => {
+                    console.error(`Error processing command: ${command}`);
                     console.error(error);
                     this.sendResponse(correlation_id, [false, error.message]);
-                });
+                }
+            );
         }
     }
 

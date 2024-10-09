@@ -148,6 +148,10 @@ export default class AircraftCommander {
                 ],
                 aircraft.pilotVoice
             );
+            return [
+                !redResponse,
+                `${aircraft.callsign}, ${r_log} ${response_end}`,
+            ];
         }
 
         return true;
