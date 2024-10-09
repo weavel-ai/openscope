@@ -1267,7 +1267,7 @@ export default class InputController {
      */
     writeAndSubmitCommand(text) {
         this._commandQueue.push(text);
-        this._processNextCommand();
+        return this._processNextCommand();
     }
 
     /**
@@ -1285,36 +1285,34 @@ export default class InputController {
         this._isProcessingCommand = true;
         const text = this._commandQueue.shift();
 
-        this._typeChars(text).then(() => {
-            try {
-                const response = this.processAircraftCommand();
+        try {
+            const parser = new CommandParser(text);
+            const parsedCommand = parser.parse();
 
-                const parser = new CommandParser(text);
-                const parsedCommand = parser.parse();
+            const aircraftModel =
+                this._aircraftController.findAircraftByCallsign(
+                    parsedCommand.callsign
+                );
 
-                const aircraftModel =
-                    this._aircraftController.findAircraftByCallsign(
-                        parsedCommand.callsign
-                    );
+            if (aircraftModel) {
+                prop.input.callsign = aircraftModel.callsign;
 
-                if (aircraftModel) {
-                    this._eventBus.trigger(
-                        EVENT.SELECT_AIRCRAFT,
-                        aircraftModel
-                    );
-                }
-                return response;
-            } catch (error) {
-                console.error(error);
-                return [false, error.message];
-            } finally {
-                // Clear the input after processing
-                setTimeout(() => {
-                    this.$commandInput.val("");
-                    this._isProcessingCommand = false;
-                    this._processNextCommand(); // Process next command in queue
-                }, 1000);
+                this._eventBus.trigger(EVENT.SELECT_AIRCRAFT, aircraftModel);
             }
-        });
+            this._typeChars(text).then(() => {
+                const response = this.processAircraftCommand();
+                return response;
+            });
+        } catch (error) {
+            console.error(error);
+            return [false, error.message];
+        } finally {
+            // Clear the input after processing
+            setTimeout(() => {
+                this.$commandInput.val("");
+                this._isProcessingCommand = false;
+                this._processNextCommand(); // Process next command in queue
+            }, 1000);
+        }
     }
 }
