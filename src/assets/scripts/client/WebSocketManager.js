@@ -188,7 +188,29 @@ export default class WebSocketManager {
             case PARSED_COMMAND_NAME.RUNWAY_DETAILS:
                 // console.log("Running runway details command");
                 const airportModel = AirportController.airport_get();
-                const runwayDetails = airportModel.getRunwayDetails();
+                const runwayDetails =
+                    airportModel._runwayCollection.runways.reduce(
+                        (acc, runway) => {
+                            acc[runway.name] = {
+                                start_relative_x: runway._positionModel.x,
+                                start_relative_y: runway._positionModel.y,
+                                angle: runway.angle,
+                                length: runway.length,
+                                taxi_queue: runway.queue.map((aircraftId) => {
+                                    const aircraft =
+                                        this.aircraftController.findAircraftById(
+                                            aircraftId
+                                        );
+                                    return aircraft
+                                        ? aircraft.callsign
+                                        : aircraftId;
+                                }),
+                                gps: runway.gps,
+                            };
+                            return acc;
+                        },
+                        {}
+                    );
                 // console.log("Runway details:", runwayDetails);
                 return [true, runwayDetails];
 

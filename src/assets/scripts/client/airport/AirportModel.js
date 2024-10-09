@@ -1000,39 +1000,4 @@ export default class AirportModel {
     distance2d(point) {
         return distance2d(point, this.relativePosition);
     }
-
-    /**
-     * Get detailed information for all runways
-     *
-     * @method getRunwayDetails
-     * @return {object} An object containing detailed information about each runway, keyed by runway name
-     */
-    getRunwayDetails() {
-        return this._runwayCollection.runways.reduce((acc, runway) => {
-            acc[runway.name] = {
-                start_relative_x: runway._positionModel.x,
-                start_relative_y: runway._positionModel.y,
-                angle: runway.angle,
-                length: runway.length,
-                taxi_queue: runway.queue.map((aircraftId) => {
-                    const aircraft =
-                        window.AircraftController.findAircraftById(aircraftId);
-                    return aircraft ? aircraft.callsign : aircraftId;
-                }),
-                gps: runway.gps,
-            };
-            return acc;
-        }, {});
-    }
-
-    // _isRunwayOccupied(runwayName) {
-    //     const aircraftController = window.aircraftController;
-    //     const aircraft = aircraftController.aircraft;
-
-    //     return aircraft.some((ac) => {
-    //         const isOnRunway = ac.isOnRunway();
-    //         const isUsingRunway = ac.fms.currentRunwayName === runwayName;
-    //         return isOnRunway && isUsingRunway;
-    //     });
-    // }
 }
