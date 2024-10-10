@@ -3227,8 +3227,10 @@ export default class AircraftModel {
         const distance_km = km(distanceInNM); // Convert NM to kilometers
 
         // Calculate the movement vector based on the current ground track (heading)
-        const dx = distance_km * Math.cos(this.groundTrack);
-        const dy = distance_km * Math.sin(this.groundTrack);
+        const dx =
+            distance_km * Math.cos(degreesToRadians(90) - this.groundTrack);
+        const dy =
+            distance_km * Math.sin(degreesToRadians(90) - this.groundTrack);
 
         // Calculate the new relative position
         const newRelativeX = this.relativePosition[0] + dx;

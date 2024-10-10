@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 import { PARSED_COMMAND_NAME } from "./constants/inputConstants";
 import AirportController from "./airport/AirportController";
 import FixCollection from "./navigationLibrary/FixCollection";
-import { radiansToDegrees } from "./utilities/unitConverters";
+import { radiansToDegrees, degreesToRadians } from "./utilities/unitConverters";
 
 export default class WebSocketManager {
     constructor(aircraftController, inputController) {
@@ -187,14 +187,22 @@ export default class WebSocketManager {
                             const extendedLength = runway.length * 3;
 
                             // Calculate the direction vector based on the angle
-                            const dx = extendedLength * Math.cos(runway.angle);
-                            const dy = extendedLength * Math.sin(runway.angle);
+                            const dx =
+                                extendedLength *
+                                Math.cos(degreesToRadians(90) - runway.angle);
+                            const dy =
+                                extendedLength *
+                                Math.sin(degreesToRadians(90) - runway.angle);
 
                             // Calculate perpendicular vector for width
                             const halfWidth = runway.length / 2;
                             const perpAngle = runway.angle + Math.PI / 2;
-                            const perpDx = halfWidth * Math.cos(perpAngle);
-                            const perpDy = halfWidth * Math.sin(perpAngle);
+                            const perpDx =
+                                halfWidth *
+                                Math.cos(degreesToRadians(90) - perpAngle);
+                            const perpDy =
+                                halfWidth *
+                                Math.sin(degreesToRadians(90) - perpAngle);
 
                             // Calculate the four vertices
 
