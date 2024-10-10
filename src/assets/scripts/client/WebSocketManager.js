@@ -185,7 +185,7 @@ export default class WebSocketManager {
                     airportModel._runwayCollection.runways.reduce(
                         (acc, runway) => {
                             const landingLinePoints = [];
-                            const lineLength = runway.length * 5;
+                            const lineLength = runway.length * 15;
                             const pointCount = 10;
                             const angleRad = (Math.PI / 2) * 3 - runway.angle;
 
@@ -199,6 +199,7 @@ export default class WebSocketManager {
                                     lineLength * fraction * Math.sin(angleRad);
                                 landingLinePoints.push([x, y]);
                             }
+                            landingLinePoints.reverse();
                             acc[runway.name] = {
                                 start_relative_x: runway._positionModel.x,
                                 start_relative_y: runway._positionModel.y,
