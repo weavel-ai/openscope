@@ -153,6 +153,5 @@ export const PARSED_COMMAND_NAME = {
     RUNWAY_DETAILS: "getRunwayDetails",
     FIX_DETAILS: "getFixDetails",
     AIRCRAFT_DETAILS: "getAircraftsInfo",
-    DEPARTURE_LIST: "getDeparturesInfo",
-    ARRIVAL_LIST: "getArrivalsInfo",
+    STRIP_DETAILS: "getStripDetails",
 };

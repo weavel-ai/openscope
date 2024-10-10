@@ -144,15 +144,11 @@ const ZERO_ARG_AIRCRAFT_COMMANDS = {
         validate: zeroArgumentsValidator,
         parse: noop,
     },
-    getDeparturesInfo: {
-        validate: zeroArgumentsValidator,
-        parse: noop,
-    },
-    getArrivalsInfo: {
-        validate: zeroArgumentsValidator,
-        parse: noop,
-    },
     getFixDetails: {
+        validate: zeroArgumentsValidator,
+        parse: noop,
+    },
+    getStripDetails: {
         validate: zeroArgumentsValidator,
         parse: noop,
     },

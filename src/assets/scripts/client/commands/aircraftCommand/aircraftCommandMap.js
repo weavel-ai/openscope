@@ -234,19 +234,14 @@ export const AIRCRAFT_COMMAND_MAP = {
         functionName: "getAircraftsInfo",
         isSystemCommand: true,
     },
-    getDeparturesInfo: {
-        aliases: ["departure"],
-        functionName: "getDeparturesInfo",
-        isSystemCommand: true,
-    },
-    getArrivalsInfo: {
-        aliases: ["arrival"],
-        functionName: "getArrivalsInfo",
-        isSystemCommand: true,
-    },
     getFixDetails: {
         aliases: ["fd"],
         functionName: "getFixDetails",
+        isSystemCommand: true,
+    },
+    getStripDetails: {
+        aliases: ["strip"],
+        functionName: "getStripDetails",
         isSystemCommand: true,
     },
 };

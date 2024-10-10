@@ -278,23 +278,14 @@ export default class WebSocketManager {
                     });
                 return [true, details];
 
-            case PARSED_COMMAND_NAME.DEPARTURE_LIST:
-                // console.log("Running departure list command");
-                const departureList =
-                    this.aircraftController._stripViewController.getDeparturesInfo();
-                // console.log("Departure list:", departureList);
-                return [true, departureList];
-
-            case PARSED_COMMAND_NAME.ARRIVAL_LIST:
-                // console.log("Running arrival list command");
-                const arrivalList =
-                    this.aircraftController._stripViewController.getArrivalsInfo();
-                // console.log("Arrival list:", arrivalList);
-                return [true, arrivalList];
-
             case PARSED_COMMAND_NAME.FIX_DETAILS:
                 const fixDetails = FixCollection.findRealFixes();
                 return [true, fixDetails];
+
+            case PARSED_COMMAND_NAME.STRIP_DETAILS:
+                const stripDetails =
+                    this.aircraftController._stripViewController.getStripDetails();
+                return [true, stripDetails];
 
             default:
                 return [false, "Command not found"];

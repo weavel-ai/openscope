@@ -416,54 +416,13 @@ export default class StripViewController {
     }
 
     /**
-     * Get detailed information for all departure strip views
+     * Get detailed information for all strip views
      *
      * @for StripViewController
-     * @method getDeparturesInfo
-     * @return {Object} An object containing detailed information for each departure strip view, keyed by aircraft id
+     * @method getStripDetails
+     * @return {Object} An object containing detailed information for each strip view, keyed by strip id
      */
-    getDeparturesInfo() {
-        const departureStripViewsInfo = {};
-
-        // console.log("this._collection._items", this._collection._items);
-
-        this._collection._items.forEach((stripViewModel) => {
-            if (stripViewModel.isDeparture) {
-                departureStripViewsInfo[stripViewModel._callsign] = {
-                    requestedAltitude: stripViewModel._assignedAltitude ?? null,
-                    requestedDepartureRunway:
-                        stripViewModel._runwayInformation?.name || null,
-                    // flightPlan: stripViewModel._flightPlan,
-                };
-            }
-        });
-
-        return departureStripViewsInfo;
-    }
-
-    /**
-     * Get detailed information for all arrival strip views
-     *
-     * @for StripViewController
-     * @method getArrivalsInfo
-     * @return {Object} An object containing detailed information for each arrival strip view, keyed by aircraft id
-     */
-    getArrivalsInfo() {
-        const arrivalStripViewsInfo = {};
-
-        // console.log("this._collection._items", this._collection._items);
-
-        this._collection._items.forEach((stripViewModel) => {
-            if (!stripViewModel.isDeparture) {
-                arrivalStripViewsInfo[stripViewModel._callsign] = {
-                    requestedAltitude: stripViewModel._assignedAltitude ?? null,
-                    requestedArrivalRunway:
-                        stripViewModel._runwayInformation?.name || null,
-                    // flightPlan: stripViewModel._flightPlan,
-                };
-            }
-        });
-
-        return arrivalStripViewsInfo;
+    getStripDetails() {
+        return this._collection._items;
     }
 }

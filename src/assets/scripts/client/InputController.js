@@ -1358,7 +1358,7 @@ export default class InputController {
                                 break; // Process one command at a time
                             }
                         }
-                    }, 800);
+                    }, 200);
                 });
         });
     }
@@ -1380,7 +1380,7 @@ export default class InputController {
                         this.$commandInput.val() + text.charAt(i)
                     );
                     i++;
-                    setTimeout(typeNextChar, 30);
+                    setTimeout(typeNextChar, 20);
                 } else {
                     resolve();
                 }
