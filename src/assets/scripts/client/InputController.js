@@ -1372,6 +1372,7 @@ export default class InputController {
      * @returns {Promise} A promise that resolves when typing is complete
      */
     _typeChars(text) {
+        this.$commandInput.val("");
         return new Promise((resolve) => {
             let i = 0;
             const typeNextChar = () => {
