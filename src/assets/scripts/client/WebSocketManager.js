@@ -184,44 +184,22 @@ export default class WebSocketManager {
                 const runwayDetails =
                     airportModel._runwayCollection.runways.reduce(
                         (acc, runway) => {
-                            const extendedLength = runway.length * 3;
+                            const landingLinePoints = [];
+                            const lineLength = runway.length * 15;
+                            const pointCount = 10;
+                            const angleRad = (Math.PI / 2) * 3 - runway.angle;
 
-                            // Calculate the direction vector based on the angle
-                            const dx =
-                                extendedLength *
-                                Math.cos(degreesToRadians(90) - runway.angle);
-                            const dy =
-                                extendedLength *
-                                Math.sin(degreesToRadians(90) - runway.angle);
-
-                            // Calculate perpendicular vector for width
-                            const halfWidth = runway.length / 2;
-                            const perpAngle = runway.angle + Math.PI / 2;
-                            const perpDx =
-                                halfWidth *
-                                Math.cos(degreesToRadians(90) - perpAngle);
-                            const perpDy =
-                                halfWidth *
-                                Math.sin(degreesToRadians(90) - perpAngle);
-
-                            // Calculate the four vertices
-
-                            const point1 = {
-                                x: runway._positionModel.x + perpDx,
-                                y: runway._positionModel.y + perpDy,
-                            };
-                            const point2 = {
-                                x: runway._positionModel.x - perpDx,
-                                y: runway._positionModel.y - perpDy,
-                            };
-                            const point3 = {
-                                x: runway._positionModel.x + perpDx - dx,
-                                y: runway._positionModel.y + perpDy - dy,
-                            };
-                            const point4 = {
-                                x: runway._positionModel.x - perpDx - dx,
-                                y: runway._positionModel.y - perpDy - dy,
-                            };
+                            for (let i = 0; i < pointCount; i++) {
+                                const fraction = i / (pointCount - 1);
+                                const x =
+                                    runway._positionModel.x +
+                                    lineLength * fraction * Math.cos(angleRad);
+                                const y =
+                                    runway._positionModel.y +
+                                    lineLength * fraction * Math.sin(angleRad);
+                                landingLinePoints.push([x, y]);
+                            }
+                            landingLinePoints.reverse();
                             acc[runway.name] = {
                                 start_relative_x: runway._positionModel.x,
                                 start_relative_y: runway._positionModel.y,
@@ -231,14 +209,9 @@ export default class WebSocketManager {
                                 // end_relative_y:
                                 //     runway._positionModel.y +
                                 //     runway.length * Math.sin(runway.angle),
-                                landing_possible_airspace: [
-                                    point1,
-                                    point2,
-                                    point3,
-                                    point4,
-                                ],
                                 // angle: runway.angle,
                                 length: runway.length,
+                                landing_line: landingLinePoints,
                                 taxi_queue: runway.queue.map((aircraftId) => {
                                     const aircraft =
                                         this.aircraftController.findAircraftById(
